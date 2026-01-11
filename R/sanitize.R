@@ -42,7 +42,7 @@ sanitize_model.glm <- function(model, trt, ...) {
   reasons_stop <- reasons_warn <- NULL
 
   # check family and link function
-  if (model$family$family != "binomial" | model$family$link != "logit") {
+  if (model$family$family != "binomial" || model$family$link != "logit") {
     reasons_stop <- c(reasons_stop, "not in the binomial family with logit link function")
   }
 

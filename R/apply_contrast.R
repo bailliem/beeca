@@ -192,6 +192,10 @@ grad_diff <- function(x, y) {
 
 # risk ratio
 rr <- function(x, y) {
+  if (any(y == 0, na.rm = TRUE)) {
+    warning("Zero denominator detected in risk ratio calculation. Returning NA for affected values.", call. = FALSE)
+    return(ifelse(y == 0, NA_real_, x / y))
+  }
   x / y
 }
 
@@ -200,6 +204,10 @@ rr_str <- function(x, y) {
 }
 
 grad_rr <- function(x, y) {
+  if (any(y == 0, na.rm = TRUE)) {
+    warning("Zero denominator detected in risk ratio gradient calculation.", call. = FALSE)
+    return(c(NA_real_, NA_real_))
+  }
   c(
     -(x / y^2),
     1 / y
@@ -208,6 +216,13 @@ grad_rr <- function(x, y) {
 
 # odds ratio
 or <- function(x, y) {
+  if (any(x == 1 | y == 1 | y == 0 | x == 0, na.rm = TRUE)) {
+    warning("Boundary value (0 or 1) detected in odds ratio calculation. Returning NA for affected values.", call. = FALSE)
+    bad_vals <- (x == 1 | y == 1 | y == 0 | x == 0)
+    result <- (x / (1 - x)) / (y / (1 - y))
+    result[bad_vals] <- NA_real_
+    return(result)
+  }
   (x / (1 - x)) / (y / (1 - y))
 }
 
@@ -220,6 +235,12 @@ grad_or <- function(x, y) {
   .e1 <- 1 - y
   .e2 <- 1 - x
   .e3 <- y / .e1
+
+  if (any(.e1 == 0 | .e2 == 0 | .e3 == 0 | y == 0, na.rm = TRUE)) {
+    warning("Boundary value detected in odds ratio gradient calculation.", call. = FALSE)
+    return(c(NA_real_, NA_real_))
+  }
+
   c(
     -(x * (1 + .e3) / (.e2 * .e1 * .e3^2)),
     .e1 * (1 + x / .e2) / (y * .e2)
@@ -228,6 +249,11 @@ grad_or <- function(x, y) {
 
 # log risk ratio
 logrr <- function(x, y) {
+  if (any(y == 0 | x <= 0, na.rm = TRUE)) {
+    warning("Invalid value detected in log risk ratio calculation (zero denominator or non-positive numerator). Returning NA for affected values.", call. = FALSE)
+    ratio <- ifelse(y == 0 | x <= 0, NA_real_, x / y)
+    return(log(ratio))
+  }
   log(rr(x, y))
 }
 
@@ -236,6 +262,10 @@ logrr_str <- function(x, y) {
 }
 
 grad_logrr <- function(x, y) {
+  if (any(y == 0 | x == 0, na.rm = TRUE)) {
+    warning("Zero value detected in log risk ratio gradient calculation.", call. = FALSE)
+    return(c(NA_real_, NA_real_))
+  }
   c(
     -(1 / y),
     1 / x
@@ -244,6 +274,11 @@ grad_logrr <- function(x, y) {
 
 # log odds ratio
 logor <- function(x, y) {
+  if (any(x == 0 | x == 1 | y == 0 | y == 1, na.rm = TRUE)) {
+    warning("Boundary value (0 or 1) detected in log odds ratio calculation. Returning NA for affected values.", call. = FALSE)
+    odds_ratio <- or(x, y)
+    return(ifelse(is.na(odds_ratio) | odds_ratio <= 0, NA_real_, log(odds_ratio)))
+  }
   log(or(x, y))
 }
 
@@ -252,6 +287,10 @@ logor_str <- function(x, y) {
 }
 
 grad_logor <- function(x, y) {
+  if (any(x == 0 | x == 1 | y == 0 | y == 1, na.rm = TRUE)) {
+    warning("Boundary value detected in log odds ratio gradient calculation.", call. = FALSE)
+    return(c(NA_real_, NA_real_))
+  }
   c(
     -1 / (y * (1 - y)),
     1 / (x * (1 - x))
