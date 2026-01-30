@@ -8,7 +8,7 @@
 [![test-coverage](https://github.com/openpharma/beeca/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/openpharma/beeca/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
-The goal of **beeca** is to provide an implementation solution with a simple user interface to estimate marginal estimands in a binary endpoint setting with covariate adjustment. The primary aim of this lightweight implementation is to facilitate quick industry adoption and use within GxP environments. A secondary aim is to support the simulation studies included in the manuscript [Magirr et al. (2024)](https://osf.io/9mp58/). 
+The goal of **beeca** is to provide an implementation solution with a simple user interface to estimate marginal estimands in a binary endpoint setting with covariate adjustment. The primary aim of this lightweight implementation is to facilitate quick industry adoption and use within GxP environments. A secondary aim is to support the simulation studies included in [Magirr et al. (2025)](https://doi.org/10.1002/pst.70021). 
 
 
 ## Installation
@@ -26,9 +26,38 @@ Motivated by the recent [FDA guidance (2023)](https://www.fda.gov/regulatory-inf
 
 The package is designed to estimate marginal (unconditional) estimands in a binary endpoint setting with covariate adjustment. It is suited for clinical trials with or without covariate adaptive (stratified permuted block or biased coin) randomization where the summary measure of the marginal estimand is one of (risk difference, odds ratio, risk ratio, log odds ratio, log risk ratio). For practical considerations on the implications of covariate adjustment in superiority vs non-inferiority trials, please see [Nicholas et al. (2015)](https://doi.org/10.1002/sim.6447) and [Morris et al. (2022)](https://doi.org/10.1186/s13063-022-06097-z).
 
-## Example
+## Examples
 
-This is a basic example which shows how to obtain the point and variance estimates of a marginal estimand with covariate adjusted working model:
+### Quick Start with `beeca_fit()`
+
+The `beeca_fit()` function provides a streamlined workflow for covariate-adjusted analysis:
+
+``` r
+library(beeca)
+
+## Quick analysis with beeca_fit()
+fit <- beeca_fit(
+  data = trial01,
+  outcome = "aval",
+  treatment = "trtp",
+  covariates = "bl_cov",
+  method = "Ye",
+  contrast = "diff"
+)
+
+## View concise results
+print(fit)
+
+## View detailed results
+summary(fit)
+
+## Create forest plot
+plot(fit)
+```
+
+### Manual Workflow
+
+For more control over the analysis, use the manual workflow:
 
 ``` r
 library(beeca)
@@ -48,6 +77,9 @@ tidy(fit1, conf.int = TRUE)
 
 ## Include marginal risk estimates for each treatment arm
 tidy(fit1, include_marginal = TRUE, conf.int = TRUE)
+
+## Create a forest plot with customization
+plot(fit1, conf.level = 0.90, title = "Treatment Effect Analysis")
 ```
 
 ## Package documentation 
@@ -78,6 +110,6 @@ Further development of covariate adjustment software is by the [Software Subteam
 
 * Ge, Miaomiao, L Kathryn Durham, R Daniel Meyer, Wangang Xie, and Neal Thomas. 2011. "Covariate-Adjusted Difference in Proportions from Clinical Trials Using Logistic Regression and Weighted Risk Differences." *Drug Information Journal: DIJ/Drug Information Association* 45: 481--93. <https://doi.org/10.1177/009286151104500409>
 
-* Magirr, Dominic, Mark Baillie, Craig Wang, and Alexander Przybylski. 2024. “Estimating the Variance of Covariate-Adjusted Estimators of Average Treatment Effects in Clinical Trials with Binary Endpoints.” OSF. May 16. <https://osf.io/9mp58>.
+* Magirr, Dominic, Craig Wang, Alexander Przybylski, and Mark Baillie. 2025. "Estimating the Variance of Covariate-Adjusted Estimators of Average Treatment Effects in Clinical Trials With Binary Endpoints." *Pharmaceutical Statistics* 24 (4): e70021. <https://doi.org/10.1002/pst.70021>
 
 * Ye, Ting, Marlena Bannick, Yanyao Yi, and Jun Shao. 2023. "Robust Variance Estimation for Covariate-Adjusted Unconditional Treatment Effect in Randomized Clinical Trials with Binary Outcomes." *Statistical Theory and Related Fields* 7 (2): 159--63. <https://doi.org/10.1080/24754269.2023.2205802>

@@ -240,7 +240,7 @@ https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adjusti
 
 - Ye et al. (2023). "Robust Variance Estimation for Covariate-Adjusted Unconditional Treatment Effect in Randomized Clinical Trials with Binary Outcomes." Statistical Theory and Related Fields 7(2): 159-63. https://doi.org/10.1080/24754269.2023.2205802
 
-- Magirr et al. (2024). "Estimating the Variance of Covariate-Adjusted Estimators of Average Treatment Effects in Clinical Trials with Binary Endpoints." OSF. https://osf.io/9mp58
+- Magirr et al. (2025). "Estimating the Variance of Covariate-Adjusted Estimators of Average Treatment Effects in Clinical Trials With Binary Endpoints." Pharmaceutical Statistics 24(4): e70021. https://doi.org/10.1002/pst.70021 [PMID: 40557557]
 
 ### Related Packages
 - RobinCar: https://cran.r-project.org/package=RobinCar
