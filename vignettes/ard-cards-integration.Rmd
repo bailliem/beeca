@@ -1,0 +1,319 @@
+---
+title: "Integration with cards/cardx ARD Framework"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Integration with cards/cardx ARD Framework}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+
+The **beeca** package produces Analysis Results Data (ARD) in a CDISC-inspired format through the `marginal_results` component. This vignette explores the relationship between beeca's ARD structure and the more general ARD framework provided by the [insightsengineering/cards](https://github.com/insightsengineering/cards) and [insightsengineering/cardx](https://github.com/insightsengineering/cardx) packages.
+
+## ARD Frameworks Comparison
+
+### beeca ARD Structure
+
+The beeca package creates ARDs following pharmaceutical industry conventions for clinical trial reporting:
+
+```{r setup, eval=FALSE}
+library(beeca)
+
+trial01$trtp <- factor(trial01$trtp)
+fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+
+fit1$marginal_results
+```
+
+**beeca ARD Schema:**
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `TRTVAR` | character | Treatment variable name |
+| `TRTVAL` | character | Treatment level value |
+| `PARAM` | character | Parameter/outcome variable name |
+| `ANALTYP1` | character | Analysis type (DESCRIPTIVE or INFERENTIAL) |
+| `STAT` | character | Statistic identifier (N, n, %, risk, risk_se, diff, diff_se) |
+| `STATVAL` | numeric | Numeric value of the statistic |
+| `ANALMETH` | character | Analysis method (count, percentage, g-computation, HC0, etc.) |
+| `ANALDESC` | character | Analysis description including package version |
+
+**Key Features:**
+- CDISC ADaM-inspired column names (PARAM, ANALTYP1)
+- Compact structure optimized for clinical trial reporting
+- Single value per row (atomic numeric type)
+- Direct integration with CDISC workflows
+
+### cards/cardx ARD Structure
+
+The cards package provides a more general ARD framework for statistical computing:
+
+**cards ARD Schema:**
+
+| Column | Description |
+|--------|-------------|
+| `group1` | First grouping variable name |
+| `group1_level` | Level/value of first grouping variable |
+| `group2` | Second grouping variable name (optional) |
+| `group2_level` | Level/value of second grouping variable (optional) |
+| `variable` | The analysis variable name |
+| `variable_level` | Specific level of the variable (for categorical) |
+| `stat_name` | Statistical measure identifier |
+| `stat_label` | Human-readable label for the statistic |
+| `stat` | The calculated value (list-column) |
+| `context` | Analysis context metadata |
+| `fmt_fn` | Formatting function reference (list-column) |
+| `warning` | Warnings from calculation (list-column) |
+| `error` | Errors from calculation (list-column) |
+
+**Key Features:**
+- List-column structure for flexible data types
+- Built-in error/warning capture
+- Human-readable labels separate from internal names
+- Formatting functions attached to each statistic
+- Extensible context system
+
+## Mapping Between Frameworks
+
+| beeca | cards | Notes |
+|-------|-------|-------|
+| `TRTVAR` | `group1` | Treatment variable name |
+| `TRTVAL` | `group1_level` | Treatment level |
+| `PARAM` | `variable` | Outcome variable |
+| `STAT` | `stat_name` | Statistic identifier |
+| `STATVAL` | `stat` | Value (numeric vs list-column) |
+| `ANALTYP1` + `ANALMETH` | `context` | Analysis context |
+| — | `stat_label` | Missing in beeca |
+| — | `fmt_fn` | Missing in beeca |
+| — | `warning`, `error` | Missing in beeca |
+| `ANALDESC` | attribute | Package metadata |
+
+## Converting beeca ARD to cards Format
+
+For users who want to work with both frameworks, here's a conversion function:
+
+```{r conversion-function, eval=FALSE}
+#' Convert beeca marginal_results to cards ARD format
+#'
+#' @param marginal_results A beeca marginal_results tibble
+#' @return A cards ARD object
+#' @export
+beeca_to_cards_ard <- function(marginal_results) {
+
+  if (!requireNamespace("cards", quietly = TRUE)) {
+    stop("Package 'cards' is required for this conversion. Please install it.")
+  }
+
+  # Create stat_label mapping
+  stat_label_map <- c(
+    "N" = "N",
+    "n" = "n",
+    "%" = "%",
+    "risk" = "Risk",
+    "risk_se" = "Risk SE",
+    "diff" = "Difference",
+    "diff_se" = "Difference SE",
+    "rr" = "Risk Ratio",
+    "rr_se" = "Risk Ratio SE",
+    "or" = "Odds Ratio",
+    "or_se" = "Odds Ratio SE",
+    "logrr" = "Log Risk Ratio",
+    "logrr_se" = "Log Risk Ratio SE",
+    "logor" = "Log Odds Ratio",
+    "logor_se" = "Log Odds Ratio SE"
+  )
+
+  result <- marginal_results |>
+    dplyr::rename(
+      group1 = TRTVAR,
+      group1_level = TRTVAL,
+      variable = PARAM,
+      stat_name = STAT
+    ) |>
+    dplyr::mutate(
+      # Add human-readable labels
+      stat_label = dplyr::case_when(
+        stat_name %in% names(stat_label_map) ~ stat_label_map[stat_name],
+        TRUE ~ toupper(stat_name)
+      ),
+
+      # Consolidate context from multiple beeca columns
+      context = paste(
+        tolower(ANALTYP1),
+        ANALMETH,
+        sep = "_"
+      ),
+
+      # Convert atomic numeric to list column (required by cards)
+      stat = as.list(STATVAL),
+
+      # Add empty list columns for cards compatibility
+      fmt_fn = list(NULL),
+      warning = list(NULL),
+      error = list(NULL),
+
+      # Add variable_level (not used in beeca's current structure)
+      variable_level = NA_character_
+    ) |>
+    dplyr::select(
+      group1, group1_level, variable, variable_level,
+      stat_name, stat_label, stat, context,
+      fmt_fn, warning, error
+    )
+
+  # Store beeca metadata as attributes
+  attr(result, "beeca_description") <- unique(marginal_results$ANALDESC)
+
+  # Apply cards column ordering and class
+  result |>
+    cards::tidy_ard_column_order() |>
+    cards::as_card()
+}
+```
+
+## Example Usage
+
+```{r example-usage, eval=FALSE}
+# Fit model and get beeca results
+trial01$trtp <- factor(trial01$trtp)
+fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+
+# Convert to cards format
+cards_ard <- beeca_to_cards_ard(fit1$marginal_results)
+
+# Now can use cards utilities
+cards::print_ard(cards_ard)
+
+# Bind with other cards ARDs
+combined_ard <- cards::bind_ard(
+  cards_ard,
+  cards::ard_continuous(trial01, by = trtp, variables = bl_cov)
+)
+```
+
+## Use Cases for Integration
+
+### 1. Comprehensive Reporting
+
+Combine beeca's covariate-adjusted treatment effects with descriptive statistics from cards:
+
+```{r comprehensive-reporting, eval=FALSE}
+# Treatment effect from beeca
+te_ard <- beeca_to_cards_ard(fit1$marginal_results)
+
+# Baseline characteristics from cards
+baseline_ard <- cards::ard_continuous(
+  data = trial01,
+  by = trtp,
+  variables = c(bl_cov, age, weight)
+)
+
+# Combine into comprehensive ARD
+full_ard <- cards::bind_ard(te_ard, baseline_ard)
+```
+
+### 2. Quality Control Workflows
+
+Use cards error-handling features with beeca results:
+
+```{r qc-workflow, eval=FALSE}
+# Multiple analyses with error capture
+analyses <- lapply(contrasts, function(contrast_type) {
+  cards::eval_capture_conditions({
+    glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+      get_marginal_effect(trt = "trtp", contrast = contrast_type) |>
+      (\(x) x$marginal_results)()
+  })
+})
+
+# Check for errors
+errors <- Filter(function(x) !is.null(x$error), analyses)
+```
+
+### 3. Cross-Study Meta-Analysis
+
+Standardize results across multiple studies:
+
+```{r meta-analysis, eval=FALSE}
+# Study 1 (beeca)
+study1_ard <- beeca_to_cards_ard(fit_study1$marginal_results) |>
+  dplyr::mutate(study = "STUDY001")
+
+# Study 2 (beeca)
+study2_ard <- beeca_to_cards_ard(fit_study2$marginal_results) |>
+  dplyr::mutate(study = "STUDY002")
+
+# Combine
+meta_ard <- cards::bind_ard(study1_ard, study2_ard)
+
+# Extract estimates for meta-analysis
+estimates <- meta_ard |>
+  dplyr::filter(stat_name == "diff") |>
+  dplyr::mutate(estimate = unlist(stat))
+```
+
+## When to Use Each Format
+
+### Use beeca's Native ARD When:
+- Working primarily in CDISC environments
+- Generating clinical trial reports
+- Compact storage is preferred
+- Integrating with ADaM datasets
+- Direct numeric values are sufficient
+
+### Convert to cards ARD When:
+- Combining with other cards/cardx analyses
+- Need error/warning tracking
+- Want formatting functions attached
+- Working with general statistical workflows
+- Need extensible metadata system
+- Generating complex multi-analysis reports
+
+## Design Philosophy Differences
+
+### beeca ARD
+- **Goal:** Clinical trial reporting efficiency
+- **Structure:** Compact, CDISC-aligned
+- **Storage:** Atomic numeric values
+- **Context:** Domain-specific columns (ANALTYP1, ANALMETH)
+- **Focus:** Marginal treatment effects
+
+### cards ARD
+- **Goal:** General statistical computing reproducibility
+- **Structure:** Flexible, extensible
+- **Storage:** List-columns for any data type
+- **Context:** Single extensible context column
+- **Focus:** Any statistical analysis
+
+## Future Enhancements
+
+Potential additions to beeca for better cards integration:
+
+1. **S3 Method:** `as_card.beeca()` for seamless conversion
+2. **Native cards Output:** Optional `output = "cards"` parameter in `get_marginal_effect()`
+3. **Error Capture:** Wrap internal calculations with `eval_capture_conditions()`
+4. **Formatting Functions:** Attach default formatting to each statistic type
+5. **Stat Labels:** Add human-readable labels to ARD by default
+
+## References
+
+- [cards package documentation](https://insightsengineering.github.io/cards/)
+- [cardx package documentation](https://insightsengineering.github.io/cardx/)
+- [CDISC ADaM Implementation Guide](https://www.cdisc.org/standards/foundational/adam)
+- [beeca package documentation](https://openpharma.github.io/beeca/)
+
+## Session Info
+
+```{r session-info}
+sessionInfo()
+```

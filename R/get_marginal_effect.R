@@ -123,5 +123,8 @@ get_marginal_effect <- function(object, trt, strata = NULL,
                                    marginal_contrasts) |> dplyr::as_tibble()
   object$marginal_results$ANALDESC <- paste0("Computed using beeca@", packageVersion("beeca"))
 
+  # Add beeca class to enable S3 methods (tidy, augment, etc.)
+  class(object) <- c("beeca", class(object))
+
   return(object)
 }

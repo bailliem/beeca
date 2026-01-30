@@ -13,3 +13,5 @@ manifest.json
 ^\.github$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^\.claude$
+^CLAUDE\.MD$

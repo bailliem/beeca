@@ -42,6 +42,12 @@ fit1 <- glm(aval ~ trtp + bl_cov, family="binomial", data=trial01) |>
 
 ## View the results in Analysis Results Data (ARD) structure
 fit1$marginal_results
+
+## Or use the tidy method for broom-compatible output
+tidy(fit1, conf.int = TRUE)
+
+## Include marginal risk estimates for each treatment arm
+tidy(fit1, include_marginal = TRUE, conf.int = TRUE)
 ```
 
 ## Package documentation 
