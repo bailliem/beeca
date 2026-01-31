@@ -1,0 +1,89 @@
+# Roadmap: beeca v0.3.0 Release
+
+## Overview
+
+This roadmap guides the v0.3.0 GitHub release readiness review for the beeca R package. The journey validates build integrity, reviews documentation accuracy, ensures vignette quality (especially ARD and clinical trial reporting examples), and prepares release artifacts. Core value: All R CMD checks pass with no errors or warnings.
+
+## Phases
+
+**Phase Numbering:**
+- Integer phases (1, 2, 3, 4): Planned milestone work
+- Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
+
+Decimal phases appear between their surrounding integers in numeric order.
+
+- [ ] **Phase 1: Build Validation** - Ensure R CMD check passes and all tests run cleanly
+- [ ] **Phase 2: Documentation Review** - Verify all documentation is accurate and complete
+- [ ] **Phase 3: Vignette Review** - Review and polish vignettes for clarity and storytelling
+- [ ] **Phase 4: Release Preparation** - Update release artifacts and finalize v0.3.0
+
+## Phase Details
+
+### Phase 1: Build Validation
+**Goal**: All package checks and tests pass without errors or warnings
+**Depends on**: Nothing (first phase)
+**Requirements**: BUILD-01, BUILD-02, BUILD-03, BUILD-04
+**Success Criteria** (what must be TRUE):
+  1. R CMD check completes with 0 errors
+  2. R CMD check completes with 0 warnings
+  3. All 80+ testthat tests pass
+  4. Test coverage gaps (if any) are identified and documented
+**Plans**: TBD
+
+Plans:
+- [ ] 01-01: TBD during planning
+
+### Phase 2: Documentation Review
+**Goal**: All documentation is accurate and complete for v0.3.0
+**Depends on**: Phase 1
+**Requirements**: DOCS-01, DOCS-02, DOCS-03
+**Success Criteria** (what must be TRUE):
+  1. README.md accurately reflects v0.3.0 features and examples
+  2. All exported functions have complete, accurate man pages
+  3. pkgdown site builds successfully without errors
+**Plans**: TBD
+
+Plans:
+- [ ] 02-01: TBD during planning
+
+### Phase 3: Vignette Review
+**Goal**: All vignettes are clear, informative, and render without errors
+**Depends on**: Phase 2
+**Requirements**: VIG-01, VIG-02, VIG-03
+**Success Criteria** (what must be TRUE):
+  1. ARD vignette clearly explains ARD format and tells a good story
+  2. Clinical trial reporting vignette demonstrates complete, realistic workflow
+  3. All vignettes (estimand_and_implementations, ARD, clinical reporting) render without errors
+**Plans**: TBD
+
+Plans:
+- [ ] 03-01: TBD during planning
+
+### Phase 4: Release Preparation
+**Goal**: Package is ready for v0.3.0 GitHub release
+**Depends on**: Phase 3
+**Requirements**: REL-01, REL-02, REL-03
+**Success Criteria** (what must be TRUE):
+  1. NEWS.md includes complete v0.3.0 changelog
+  2. DESCRIPTION file version set to 0.3.0
+  3. All lifecycle deprecations (if any) are properly documented
+  4. Git tag v0.3.0 is ready to push
+**Plans**: TBD
+
+Plans:
+- [ ] 04-01: TBD during planning
+
+## Progress
+
+**Execution Order:**
+Phases execute in numeric order: 1 → 2 → 3 → 4
+
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 1. Build Validation | 0/? | Not started | - |
+| 2. Documentation Review | 0/? | Not started | - |
+| 3. Vignette Review | 0/? | Not started | - |
+| 4. Release Preparation | 0/? | Not started | - |
+
+---
+*Last updated: 2026-01-31 after roadmap creation*
