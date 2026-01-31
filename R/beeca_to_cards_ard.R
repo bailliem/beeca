@@ -89,27 +89,27 @@ beeca_to_cards_ard <- function(marginal_results) {
 
   result <- marginal_results |>
     dplyr::rename(
-      group1 = TRTVAR,
-      group1_level = TRTVAL,
-      variable = PARAM,
-      stat_name = STAT
+      group1 = .data$TRTVAR,
+      group1_level = .data$TRTVAL,
+      variable = .data$PARAM,
+      stat_name = .data$STAT
     ) |>
     dplyr::mutate(
       # Add human-readable labels
       stat_label = dplyr::case_when(
-        stat_name %in% names(stat_label_map) ~ stat_label_map[stat_name],
-        TRUE ~ toupper(stat_name)
+        .data$stat_name %in% names(stat_label_map) ~ stat_label_map[.data$stat_name],
+        TRUE ~ toupper(.data$stat_name)
       ),
 
       # Consolidate context from multiple beeca columns
       context = paste(
-        tolower(ANALTYP1),
-        ANALMETH,
+        tolower(.data$ANALTYP1),
+        .data$ANALMETH,
         sep = "_"
       ),
 
       # Convert atomic numeric to list column (required by cards)
-      stat = as.list(STATVAL),
+      stat = as.list(.data$STATVAL),
 
       # Add empty list columns for cards compatibility
       fmt_fn = list(NULL),
@@ -120,13 +120,13 @@ beeca_to_cards_ard <- function(marginal_results) {
       variable_level = NA_character_
     ) |>
     dplyr::select(
-      group1, group1_level, variable, variable_level,
-      stat_name, stat_label, stat, context,
-      fmt_fn, warning, error
+      .data$group1, .data$group1_level, .data$variable, .data$variable_level,
+      .data$stat_name, .data$stat_label, .data$stat, .data$context,
+      .data$fmt_fn, .data$warning, .data$error
     )
 
   # Store beeca metadata as attributes
-  attr(result, "beeca_description") <- unique(marginal_results$ANALDESC)
+  attr(result, "beeca_description") <- unique(marginal_results[["ANALDESC"]])
 
   # Apply cards column ordering and class
   result |>

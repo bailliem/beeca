@@ -43,7 +43,8 @@
 #' as_gt(fit,
 #'   title = "Table 14.2.1: Primary Efficacy Analysis",
 #'   subtitle = "Response Rate by Treatment Group",
-#'   source_note = "Risk difference estimated using g-computation with robust variance (Ye et al. 2023)",
+#'   source_note = paste("Risk difference estimated using g-computation",
+#'                       "with robust variance (Ye et al. 2023)"),
 #'   analysis_set = "Full Analysis Set (FAS)"
 #' )
 #' }
@@ -52,6 +53,11 @@
 #' @seealso [summary.beeca()] for console output
 as_gt <- function(x, ...) {
   UseMethod("as_gt")
+}
+
+#' @export
+as_gt.default <- function(x, ...) {
+  stop("x must be a beeca object (from get_marginal_effect() or beeca_fit())")
 }
 
 #' @rdname as_gt

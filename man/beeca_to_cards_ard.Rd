@@ -29,17 +29,16 @@ quality control workflows.
 }
 \details{
 The function maps beeca's CDISC-inspired ARD structure to the cards package
-format:
-
-\tabular{lll}{
-beeca \tab cards \tab Notes \cr
-\code{TRTVAR} \tab \code{group1} \tab Treatment variable name \cr
-\code{TRTVAL} \tab \code{group1_level} \tab Treatment level \cr
-\code{PARAM} \tab \code{variable} \tab Outcome variable \cr
-\code{STAT} \tab \code{stat_name} \tab Statistic identifier \cr
-\code{STATVAL} \tab \code{stat} \tab Value (numeric vs list-column) \cr
-\code{ANALTYP1} + \code{ANALMETH} \tab \code{context} \tab Analysis context \cr
+format:\tabular{lll}{
+   beeca \tab cards \tab Notes \cr
+   \code{TRTVAR} \tab \code{group1} \tab Treatment variable name \cr
+   \code{TRTVAL} \tab \code{group1_level} \tab Treatment level \cr
+   \code{PARAM} \tab \code{variable} \tab Outcome variable \cr
+   \code{STAT} \tab \code{stat_name} \tab Statistic identifier \cr
+   \code{STATVAL} \tab \code{stat} \tab Value (numeric vs list-column) \cr
+   \code{ANALTYP1} + \code{ANALMETH} \tab \code{context} \tab Analysis context \cr
 }
+
 
 Original beeca metadata is preserved in the \code{beeca_description} attribute.
 }
