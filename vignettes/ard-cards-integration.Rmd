@@ -173,6 +173,15 @@ errors <- Filter(function(x) !is.null(x$error), analyses)
 
 Standardize results across multiple studies:
 
+```{r create-study-fits, eval=TRUE}
+# Create fit objects for two studies (using same data for illustration)
+fit_study1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+
+fit_study2 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+```
+
 ```{r meta-analysis, eval=TRUE}
 # Study 1 (beeca)
 study1_ard <- beeca_to_cards_ard(fit_study1$marginal_results) |>
