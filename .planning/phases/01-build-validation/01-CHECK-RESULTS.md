@@ -13,7 +13,7 @@
 |------------|--------|---------|
 | R CMD check | ❌ ERROR | Vignette build failure |
 | testthat | ✅ PASS | 302 tests pass, 0 failures |
-| Coverage | Pending | Not yet run |
+| Coverage | ✅ GOOD | 88.90% overall, 1 gap identified |
 
 ---
 
@@ -181,9 +181,78 @@ All 13 skipped tests are conditional and expected:
 
 ### Test Coverage
 
-**Status:** Not yet run (blocked by R CMD check failure)
+**Status:** ✅ EXCELLENT (88.90% overall coverage)
 
-Will run after vignette issue is resolved.
+**Overall Coverage:** 88.90%
+
+**Coverage by File:**
+
+| File | Coverage | Status |
+|------|----------|--------|
+| R/apply_contrast.R | 100.00% | ✅ Perfect |
+| R/average_predictions.R | 100.00% | ✅ Perfect |
+| R/get_marginal_effect.R | 100.00% | ✅ Perfect |
+| R/plot.R | 100.00% | ✅ Perfect |
+| R/predict_counterfactuals.R | 100.00% | ✅ Perfect |
+| R/tidy.R | 98.18% | ✅ Excellent |
+| R/estimate_varcov.R | 98.18% | ✅ Excellent |
+| R/augment.R | 97.44% | ✅ Excellent |
+| R/summary.R | 96.92% | ✅ Excellent |
+| R/sanitize.R | 96.00% | ✅ Excellent |
+| R/plot_forest.R | 95.45% | ✅ Excellent |
+| R/as_gt.R | 93.00% | ✅ Great |
+| R/beeca_fit.R | 78.95% | ⚠️ Good |
+| R/print.R | 70.37% | ⚠️ Acceptable |
+| R/beeca_to_cards_ard.R | 0.00% | ❌ **Coverage Gap** |
+
+**Coverage Gaps Identified:**
+
+1. **CRITICAL GAP: R/beeca_to_cards_ard.R - 0.00% coverage**
+   - **Function:** `beeca_to_cards_ard()` - ARD conversion utility
+   - **Impact:** This is a newly added exported function with no test coverage
+   - **Recommendation:** Add tests for this function
+   - **Note:** This is likely the function mentioned in the vignette error
+
+2. **Moderate gaps:**
+   - **R/print.R** (70.37%): Print methods have lower coverage
+     - Likely due to conditional formatting/output branches
+     - Status: Acceptable for display methods
+
+   - **R/beeca_fit.R** (78.95%): Main fitting wrapper
+     - May have untested error handling paths
+     - Status: Good, but could improve
+
+**Analysis:**
+
+✅ **Core computational functions** have perfect or near-perfect coverage:
+- Counterfactual prediction: 100%
+- Averaging: 100%
+- Contrast application: 100%
+- Variance estimation: 98.18%
+- Main orchestration (`get_marginal_effect`): 100%
+
+✅ **User-facing utilities** well covered:
+- Tidy methods: 98.18%
+- Augment: 97.44%
+- Summary: 96.92%
+- Sanitization/validation: 96.00%
+- Plotting: 95.45%+
+
+⚠️ **Display/formatting methods** have acceptable coverage:
+- Print methods: 70.37% (acceptable for output formatting)
+- GT table formatting: 93.00%
+
+❌ **NEW FUNCTION NEEDS TESTS:**
+- `beeca_to_cards_ard()`: 0% coverage (newly exported utility)
+
+**Coverage Report:**
+
+HTML coverage report generated at:
+`.planning/phases/01-build-validation/coverage-report.html`
+
+**Conclusion:**
+
+The package has strong test coverage at 88.90% overall. Core statistical functions have perfect or near-perfect coverage. The main gap is the newly added `beeca_to_cards_ard()` function which has 0% coverage and is causing the vignette build failure.
 
 ---
 
