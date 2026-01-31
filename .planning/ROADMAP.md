@@ -28,10 +28,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. R CMD check completes with 0 warnings
   3. All 80+ testthat tests pass
   4. Test coverage gaps (if any) are identified and documented
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD during planning
+- [ ] 01-01-PLAN.md — Run R CMD check and testthat suite, capture results
+- [ ] 01-02-PLAN.md — Triage issues with user, apply fixes, finalize validation
 
 ### Phase 2: Documentation Review
 **Goal**: All documentation is accurate and complete for v0.3.0
@@ -80,10 +81,10 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Build Validation | 0/? | Not started | - |
+| 1. Build Validation | 0/2 | Planned | - |
 | 2. Documentation Review | 0/? | Not started | - |
 | 3. Vignette Review | 0/? | Not started | - |
 | 4. Release Preparation | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-01-31 after roadmap creation*
+*Last updated: 2026-01-31 after Phase 1 planning*
