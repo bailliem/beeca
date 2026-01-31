@@ -24,7 +24,7 @@ The **beeca** package produces Analysis Results Data (ARD) in a CDISC-inspired f
 
 The beeca package creates ARDs following pharmaceutical industry conventions for clinical trial reporting:
 
-```{r setup, eval=FALSE}
+```{r setup}
 library(beeca)
 
 trial01$trtp <- factor(trial01$trtp)
@@ -112,23 +112,22 @@ See `?beeca_to_cards_ard` for detailed documentation and the mapping table betwe
 
 ## Example Usage
 
-```{r example-usage, eval=FALSE}
-# Fit model and get beeca results
-trial01$trtp <- factor(trial01$trtp)
-fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+```{r example-usage, eval=requireNamespace("cards", quietly = TRUE)}
+library(cards)
 
-# Convert to cards format
+# Convert to cards format (fit1 created in setup chunk)
 cards_ard <- beeca_to_cards_ard(fit1$marginal_results)
 
-# Now can use cards utilities
-cards::print_ard(cards_ard)
+# Print the cards ARD (uses print method for 'card' class)
+print(cards_ard)
 
 # Bind with other cards ARDs
 combined_ard <- cards::bind_ard(
   cards_ard,
   cards::ard_continuous(trial01, by = trtp, variables = bl_cov)
 )
+
+print(combined_ard)
 ```
 
 ## Use Cases for Integration
@@ -137,7 +136,7 @@ combined_ard <- cards::bind_ard(
 
 Combine beeca's covariate-adjusted treatment effects with descriptive statistics from cards:
 
-```{r comprehensive-reporting, eval=FALSE}
+```{r comprehensive-reporting, eval=TRUE}
 # Treatment effect from beeca
 te_ard <- beeca_to_cards_ard(fit1$marginal_results)
 
@@ -145,7 +144,7 @@ te_ard <- beeca_to_cards_ard(fit1$marginal_results)
 baseline_ard <- cards::ard_continuous(
   data = trial01,
   by = trtp,
-  variables = c(bl_cov, age, weight)
+  variables = c(bl_cov)
 )
 
 # Combine into comprehensive ARD
@@ -156,7 +155,7 @@ full_ard <- cards::bind_ard(te_ard, baseline_ard)
 
 Use cards error-handling features with beeca results:
 
-```{r qc-workflow, eval=FALSE}
+```{r qc-workflow, eval=TRUE}
 # Multiple analyses with error capture
 analyses <- lapply(contrasts, function(contrast_type) {
   cards::eval_capture_conditions({
@@ -174,7 +173,7 @@ errors <- Filter(function(x) !is.null(x$error), analyses)
 
 Standardize results across multiple studies:
 
-```{r meta-analysis, eval=FALSE}
+```{r meta-analysis, eval=TRUE}
 # Study 1 (beeca)
 study1_ard <- beeca_to_cards_ard(fit_study1$marginal_results) |>
   dplyr::mutate(study = "STUDY001")

@@ -10,12 +10,14 @@
 #'   containing the output from `get_marginal_effect()$marginal_results`.
 #'
 #' @return A cards ARD object (tibble with class 'card') containing:
-#'   * `group1`, `group1_level`: Treatment variable and level
-#'   * `variable`, `variable_level`: Outcome variable and level
+#'   * `group1`: Treatment variable name (character)
+#'   * `group1_level`: Treatment level (list-column, numeric if possible, else character)
+#'   * `variable`: Outcome variable name (character)
+#'   * `variable_level`: Specific level of variable (character, NA for beeca)
 #'   * `stat_name`, `stat_label`: Statistic identifier and human-readable label
-#'   * `stat`: The calculated value (as list-column)
+#'   * `stat`: The calculated value (list-column)
 #'   * `context`: Analysis context (combining ANALTYP1 and ANALMETH)
-#'   * `fmt_fn`, `warning`, `error`: Cards-specific metadata columns
+#'   * `fmt_fn`, `warning`, `error`: Cards-specific metadata (list-columns)
 #'
 #' @details
 #' The function maps beeca's CDISC-inspired ARD structure to the cards package
@@ -47,8 +49,8 @@
 #' # Convert to cards format
 #' cards_ard <- beeca_to_cards_ard(fit1$marginal_results)
 #'
-#' # Now can use cards utilities
-#' cards::print_ard(cards_ard)
+#' # Print the cards ARD (uses print method for 'card' class)
+#' print(cards_ard)
 #'
 #' # Bind with other cards ARDs
 #' combined_ard <- cards::bind_ard(
@@ -90,11 +92,17 @@ beeca_to_cards_ard <- function(marginal_results) {
   result <- marginal_results |>
     dplyr::rename(
       group1 = .data$TRTVAR,
-      group1_level = .data$TRTVAL,
       variable = .data$PARAM,
       stat_name = .data$STAT
     ) |>
     dplyr::mutate(
+      # Convert group1_level to list-column (required by cards for compatibility)
+      # Try to convert to numeric if possible, otherwise keep as character
+      group1_level = lapply(.data$TRTVAL, function(x) {
+        num_val <- suppressWarnings(as.numeric(x))
+        if (!is.na(num_val)) num_val else x
+      }),
+
       # Add human-readable labels
       stat_label = dplyr::case_when(
         .data$stat_name %in% names(stat_label_map) ~ stat_label_map[.data$stat_name],

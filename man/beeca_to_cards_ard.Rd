@@ -13,12 +13,14 @@ containing the output from \code{get_marginal_effect()$marginal_results}.}
 \value{
 A cards ARD object (tibble with class 'card') containing:
 \itemize{
-\item \code{group1}, \code{group1_level}: Treatment variable and level
-\item \code{variable}, \code{variable_level}: Outcome variable and level
+\item \code{group1}: Treatment variable name (character)
+\item \code{group1_level}: Treatment level (list-column, numeric if possible, else character)
+\item \code{variable}: Outcome variable name (character)
+\item \code{variable_level}: Specific level of variable (character, NA for beeca)
 \item \code{stat_name}, \code{stat_label}: Statistic identifier and human-readable label
-\item \code{stat}: The calculated value (as list-column)
+\item \code{stat}: The calculated value (list-column)
 \item \code{context}: Analysis context (combining ANALTYP1 and ANALMETH)
-\item \code{fmt_fn}, \code{warning}, \code{error}: Cards-specific metadata columns
+\item \code{fmt_fn}, \code{warning}, \code{error}: Cards-specific metadata (list-columns)
 }
 }
 \description{
@@ -59,8 +61,8 @@ fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
 # Convert to cards format
 cards_ard <- beeca_to_cards_ard(fit1$marginal_results)
 
-# Now can use cards utilities
-cards::print_ard(cards_ard)
+# Print the cards ARD (uses print method for 'card' class)
+print(cards_ard)
 
 # Bind with other cards ARDs
 combined_ard <- cards::bind_ard(

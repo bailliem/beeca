@@ -4,7 +4,8 @@
       "Bash(gh repo view:*)",
       "Bash(Rscript:*)",
       "Bash(grep:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(ls:*)"
     ]
   }
 }
