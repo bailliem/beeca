@@ -17,19 +17,79 @@
 
 ---
 
-## Issue Categories
+## Issue Categories for Triage
 
-### Blockers
-- **Vignette Build Failure**: `ard-cards-integration.Rmd` fails to build
-  - Error: `object 'fit_study1' not found` at lines 176-192 [meta-analysis chunk]
-  - Function: `beeca_to_cards_ard(fit_study1$marginal_results)`
-  - Impact: R CMD check cannot complete, package cannot be built
+### Blockers (Must Fix Before Release)
 
-### Warnings
-None yet detected.
+**1. Vignette Build Failure** - `ard-cards-integration.Rmd`
+- **Error:** `object 'fit_study1' not found` at lines 176-192 [meta-analysis chunk]
+- **Location:** Chunk named `meta-analysis` in vignette file
+- **Function call:** `beeca_to_cards_ard(fit_study1$marginal_results)`
+- **Impact:** Prevents R CMD build completion, blocks package creation
+- **Root cause:** Variable `fit_study1` used before being defined in vignette
+- **Priority:** 🔴 **CRITICAL** - Must fix for release
+- **Next step:** Investigate vignette source to determine if:
+  1. `fit_study1` definition is missing
+  2. Code chunks are out of order
+  3. Meta-analysis section should be removed/commented out
 
-### Notes
-None yet detected.
+**2. Missing Test Coverage** - `beeca_to_cards_ard()`
+- **File:** R/beeca_to_cards_ard.R
+- **Coverage:** 0.00% (no tests)
+- **Function:** Exported utility for converting beeca ARD to cards format
+- **Impact:** No test coverage for newly exported function
+- **Priority:** 🟠 **HIGH** - Should add tests before release
+- **Connection:** This is the same function causing vignette error
+- **Next step:** Add test file `test-beeca_to_cards_ard.R` after fixing vignette
+
+### Warnings (Evaluate and Document)
+
+**1. ggplot2 Deprecation** (46 warnings in plot tests)
+- **Message:** "`geom_errorbarh()` was deprecated in ggplot2 4.0.0"
+- **Recommendation:** Use `orientation` argument of `geom_errorbar()` instead
+- **Files affected:** R/plot_forest.R
+- **Impact:** Works now, but may break in future ggplot2 versions
+- **Priority:** 🟡 **MEDIUM** - Technical debt for future release
+- **Decision needed:** Fix now or defer to next release?
+
+**2. Missing Data Warnings** (40 warnings in tests)
+- **Message:** "There is 1 record omitted from the original data due to missing values"
+- **Source:** `sanitize_model()` validation function
+- **Impact:** None - this is expected behavior, tests use data with missing values intentionally
+- **Priority:** ✅ **INFORMATIONAL** - No action needed
+- **Status:** Expected and correct
+
+### Notes (Document for Awareness)
+
+**1. Skipped Tests** (13 tests)
+- **Reason 1:** Conditional tests for optional packages (gt not available)
+- **Reason 2:** Known environment issue - "subscript out of bounds" (10 tests)
+- **Reason 3:** Empty placeholder test (1 test)
+- **Impact:** None - tests are conditionally skipped as designed
+- **Priority:** ✅ **INFORMATIONAL** - No action needed for release
+- **Future work:** Investigate "subscript out of bounds" issue in test environment
+
+**2. Coverage Gaps in Display Functions**
+- **R/print.R:** 70.37% coverage
+- **R/beeca_fit.R:** 78.95% coverage
+- **Reason:** Display/formatting functions have many conditional branches
+- **Impact:** Low risk - these are UI functions, not statistical computations
+- **Priority:** ✅ **ACCEPTABLE** - No action needed for release
+- **Status:** Acceptable coverage for user-facing display code
+
+### Triage Summary
+
+**Must fix (2 blockers):**
+1. Fix vignette error in `ard-cards-integration.Rmd`
+2. Add tests for `beeca_to_cards_ard()` function
+
+**Should evaluate (1 warning):**
+1. Decide on ggplot2 deprecation fix (defer or fix now)
+
+**Document only (3 notes):**
+1. Skipped tests are expected
+2. Missing data warnings are expected
+3. Display function coverage is acceptable
 
 ---
 
