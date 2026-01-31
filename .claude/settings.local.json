@@ -5,7 +5,15 @@
       "Bash(Rscript:*)",
       "Bash(grep:*)",
       "Bash(test:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: initialize project\n\nRelease readiness review for beeca v0.3.0 GitHub release\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: add project config\n\nMode: yolo\nDepth: quick\nParallelization: enabled\nWorkflow agents: research=on, plan_check=on, verifier=on\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: define v1 requirements\n\n13 requirements across 4 categories\n- Build & Tests \\(4\\)\n- Documentation \\(3\\)\n- Vignettes \\(3\\)\n- Release Prep \\(3\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: create roadmap \\(4 phases\\)\n\nPhases:\n1. Build Validation: R CMD check, tests, coverage\n2. Documentation Review: README, man pages, pkgdown\n3. Vignette Review: ARD, clinical trial reporting\n4. Release Preparation: NEWS.md, version bump, tagging\n\nAll v1 requirements mapped to phases.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Skill(gsd:discuss-phase)",
+      "Bash(git commit:*)",
+      "Bash(git check-ignore:*)"
     ]
   }
 }
