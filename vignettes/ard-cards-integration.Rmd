@@ -99,86 +99,16 @@ The cards package provides a more general ARD framework for statistical computin
 
 ## Converting beeca ARD to cards Format
 
-For users who want to work with both frameworks, here's a conversion function:
+The beeca package provides the `beeca_to_cards_ard()` function to convert `marginal_results` output to the cards ARD format. This enables seamless integration with the cards/cardx ecosystem.
 
-```{r conversion-function, eval=FALSE}
-#' Convert beeca marginal_results to cards ARD format
-#'
-#' @param marginal_results A beeca marginal_results tibble
-#' @return A cards ARD object
-#' @export
-beeca_to_cards_ard <- function(marginal_results) {
+The conversion function:
+- Maps beeca columns (TRTVAR, TRTVAL, PARAM, STAT, STATVAL) to cards columns (group1, group1_level, variable, stat_name, stat)
+- Adds human-readable stat_label for each statistic
+- Converts atomic numeric values to list-columns (required by cards)
+- Consolidates ANALTYP1 and ANALMETH into a single context field
+- Preserves original beeca metadata as attributes
 
-  if (!requireNamespace("cards", quietly = TRUE)) {
-    stop("Package 'cards' is required for this conversion. Please install it.")
-  }
-
-  # Create stat_label mapping
-  stat_label_map <- c(
-    "N" = "N",
-    "n" = "n",
-    "%" = "%",
-    "risk" = "Risk",
-    "risk_se" = "Risk SE",
-    "diff" = "Difference",
-    "diff_se" = "Difference SE",
-    "rr" = "Risk Ratio",
-    "rr_se" = "Risk Ratio SE",
-    "or" = "Odds Ratio",
-    "or_se" = "Odds Ratio SE",
-    "logrr" = "Log Risk Ratio",
-    "logrr_se" = "Log Risk Ratio SE",
-    "logor" = "Log Odds Ratio",
-    "logor_se" = "Log Odds Ratio SE"
-  )
-
-  result <- marginal_results |>
-    dplyr::rename(
-      group1 = TRTVAR,
-      group1_level = TRTVAL,
-      variable = PARAM,
-      stat_name = STAT
-    ) |>
-    dplyr::mutate(
-      # Add human-readable labels
-      stat_label = dplyr::case_when(
-        stat_name %in% names(stat_label_map) ~ stat_label_map[stat_name],
-        TRUE ~ toupper(stat_name)
-      ),
-
-      # Consolidate context from multiple beeca columns
-      context = paste(
-        tolower(ANALTYP1),
-        ANALMETH,
-        sep = "_"
-      ),
-
-      # Convert atomic numeric to list column (required by cards)
-      stat = as.list(STATVAL),
-
-      # Add empty list columns for cards compatibility
-      fmt_fn = list(NULL),
-      warning = list(NULL),
-      error = list(NULL),
-
-      # Add variable_level (not used in beeca's current structure)
-      variable_level = NA_character_
-    ) |>
-    dplyr::select(
-      group1, group1_level, variable, variable_level,
-      stat_name, stat_label, stat, context,
-      fmt_fn, warning, error
-    )
-
-  # Store beeca metadata as attributes
-  attr(result, "beeca_description") <- unique(marginal_results$ANALDESC)
-
-  # Apply cards column ordering and class
-  result |>
-    cards::tidy_ard_column_order() |>
-    cards::as_card()
-}
-```
+See `?beeca_to_cards_ard` for detailed documentation and the mapping table between beeca and cards columns.
 
 ## Example Usage
 
@@ -297,9 +227,9 @@ estimates <- meta_ard |>
 
 ## Future Enhancements
 
-Potential additions to beeca for better cards integration:
+The beeca package now includes `beeca_to_cards_ard()` as an exported function for cards integration. Potential future additions include:
 
-1. **S3 Method:** `as_card.beeca()` for seamless conversion
+1. **S3 Method:** `as_card.beeca()` for seamless conversion (currently using standalone function)
 2. **Native cards Output:** Optional `output = "cards"` parameter in `get_marginal_effect()`
 3. **Error Capture:** Wrap internal calculations with `eval_capture_conditions()`
 4. **Formatting Functions:** Attach default formatting to each statistic type
