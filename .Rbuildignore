@@ -17,3 +17,4 @@ manifest.json
 ^CLAUDE\.MD$
 ^ENHANCEMENTS\.md$
 ^IMPLEMENTATION_PLAN\.md$
+^\.planning$
