@@ -13,6 +13,7 @@ This roadmap guides the v0.3.0 GitHub release readiness review for the beeca R p
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Build Validation** - Ensure R CMD check passes and all tests run cleanly
+- [x] **Phase 1.1: GEE Longitudinal Extension Feasibility** (INSERTED) - Feasibility spike for extending beeca to support GEE/longitudinal binary endpoints
 - [ ] **Phase 2: Documentation Review** - Verify all documentation is accurate and complete
 - [ ] **Phase 3: Vignette Review** - Review and polish vignettes for clarity and storytelling
 - [ ] **Phase 4: Release Preparation** - Update release artifacts and finalize v0.3.0
@@ -33,6 +34,21 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Run R CMD check and testthat suite, capture results
 - [x] 01-02-PLAN.md — Triage issues with user, apply fixes, finalize validation
+
+### Phase 1.1: GEE Longitudinal Extension Feasibility (INSERTED)
+**Goal**: Determine feasibility and scope of extending beeca to support GEE-fitted models for longitudinal binary endpoints
+**Depends on**: Phase 1
+**Requirements**: RESEARCH — user feature request for GEE/longitudinal support
+**Success Criteria** (what must be TRUE):
+  1. Feasibility report produced: can beeca's pipeline accept glmgee/geeglm objects?
+  2. Tested with glmtoolbox and/or geepack on a simple longitudinal binary example
+  3. Go/no-go recommendation with clear rationale
+  4. If go: scoped implementation plan (beeca vs. companion package)
+**Plans**: 2 plans
+
+Plans:
+- [x] 01.1-01-PLAN.md — Run GEE feasibility test script through beeca pipeline
+- [x] 01.1-02-PLAN.md — Synthesize results into feasibility report with go/no-go recommendation
 
 ### Phase 2: Documentation Review
 **Goal**: All documentation is accurate and complete for v0.3.0
@@ -77,14 +93,15 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 → 1.1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Build Validation | 2/2 | ✓ Complete | 2026-01-31 |
+| 1.1 GEE Longitudinal Feasibility (INSERTED) | 2/2 | ✓ Complete | 2026-02-03 |
 | 2. Documentation Review | 0/? | Not started | - |
 | 3. Vignette Review | 0/? | Not started | - |
 | 4. Release Preparation | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-01-31 after Phase 1 execution*
+*Last updated: 2026-02-03 after Phase 1.1 execution*
