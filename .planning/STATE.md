@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-31)
 
 **Core value:** All R CMD checks pass with no errors or warnings
-**Current focus:** Phase 1 - Build Validation
+**Current focus:** Phase 2 - Documentation Review
 
 ## Current Position
 
-Phase: 1.1 of 4 (GEE Longitudinal Extension Feasibility)
-Plan: 2 of 2 complete
-Status: Phase complete
-Last activity: 2026-02-03 — Completed 01.1-02-PLAN.md (GEE feasibility report)
+Phase: 2 of 4 (Documentation Review)
+Plan: 1 of 3 complete
+Status: In progress
+Last activity: 2026-02-06 — Completed 02-02-PLAN.md (README update)
 
-Progress: [███░░░░░░░] 30%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 19.5 min
-- Total execution time: 78 min
+- Total plans completed: 5
+- Average duration: 16 min
+- Total execution time: 80 min
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [███░░░░░░░] 30%
 |-------|-------|-------|----------|
 | 01-build-validation | 2/2 | 7 min | 3.5 min |
 | 01.1-gee-longitudinal-feasibility | 2/2 | 71 min | 35.5 min |
+| 02-documentation-review | 1/3 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (4min), 01-02 (3min), 01.1-01 (8min), 01.1-02 (63min)
-- Trend: Research/analysis phases take significantly longer than implementation
+- Last 5 plans: 01-02 (3min), 01.1-01 (8min), 01.1-02 (63min), 02-02 (2min)
+- Trend: Documentation updates are fast, research phases take longer
 
 *Updated after each plan completion*
 
@@ -78,6 +79,10 @@ Recent decisions affecting current work:
 - Recommend glmtoolbox over geepack (Mancl-DeRouen correction, better maintenance)
 - User approved Option A recommendation
 
+**From 02-02 (README Update):**
+- GitHub installation as primary method (v0.3.0 not yet on CRAN)
+- No mention of GEE or future features (README describes only shipping features)
+
 ### Roadmap Evolution
 
 - Phase 1.1 inserted after Phase 1: GEE Longitudinal Extension Feasibility (URGENT) — user feature request for extending beeca to support GEE/longitudinal binary endpoints with Mancl-DeRouen variance, Firth-penalised GEE, and MVT multiplicity adjustment. Detailed analysis saved in 01.1-ANALYSIS.md.
@@ -101,11 +106,15 @@ None yet.
 - ✓ User approved Option A (minimal implementation)
 - Next: Decide whether to proceed with implementation phases 1.1.1-1.1.4 (3.5 days)
 
+**Phase 2 In Progress - Documentation Review:**
+- ✓ Plan 02 complete: README updated for v0.3.0
+- Next: Plan 03 (NEWS.md update)
+
 **No blocking issues.**
 
 ## Session Continuity
 
-Last session: 2026-02-03T20:47:29Z
-Stopped at: Completed 01.1-02-PLAN.md (GEE feasibility report)
+Last session: 2026-02-06T21:06:00Z
+Stopped at: Completed 02-02-PLAN.md (README update)
 Resume file: None
-Next step: Decision point - implement Option A (phases 1.1.1-1.1.4) or defer pending resource allocation
+Next step: Execute 02-03-PLAN.md (NEWS.md update)
