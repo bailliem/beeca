@@ -58,10 +58,12 @@ Plans:
   1. README.md accurately reflects v0.3.0 features and examples
   2. All exported functions have complete, accurate man pages
   3. pkgdown site builds successfully without errors
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: TBD during planning
+- [ ] 02-01-PLAN.md — Review and standardize all man page documentation + DESCRIPTION audit
+- [ ] 02-02-PLAN.md — Update README.md for v0.3.0
+- [ ] 02-03-PLAN.md — Restructure pkgdown site and verify build
 
 ### Phase 3: Vignette Review
 **Goal**: All vignettes are clear, informative, and render without errors
@@ -99,9 +101,9 @@ Phases execute in numeric order: 1 → 1.1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Build Validation | 2/2 | ✓ Complete | 2026-01-31 |
 | 1.1 GEE Longitudinal Feasibility (INSERTED) | 2/2 | ✓ Complete | 2026-02-03 |
-| 2. Documentation Review | 0/? | Not started | - |
+| 2. Documentation Review | 0/3 | Planned | - |
 | 3. Vignette Review | 0/? | Not started | - |
 | 4. Release Preparation | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-03 after Phase 1.1 execution*
+*Last updated: 2026-02-06 after Phase 2 planning*
