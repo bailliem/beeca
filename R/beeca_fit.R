@@ -184,16 +184,25 @@ beeca_fit <- function(data,
                     method, contrast))
   }
 
+  # Build get_marginal_effect arguments
+  gme_args <- list(
+    object = fit,
+    trt = treatment,
+    strata = strata,
+    method = method,
+    contrast = contrast
+  )
+
+  # Only add reference if not NULL (allows get_marginal_effect to use its default)
+  if (!is.null(reference)) {
+    gme_args$reference <- reference
+  }
+
+  # Add any additional arguments
+  gme_args <- c(gme_args, list(...))
+
   result <- tryCatch(
-    get_marginal_effect(
-      fit,
-      trt = treatment,
-      strata = strata,
-      method = method,
-      contrast = contrast,
-      reference = reference,
-      ...
-    ),
+    do.call(get_marginal_effect, gme_args),
     error = function(e) {
       stop(sprintf("Marginal effect estimation failed: %s", e$message),
            call. = FALSE)
