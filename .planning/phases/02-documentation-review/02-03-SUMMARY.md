@@ -63,7 +63,7 @@ Each task was committed atomically:
 1. **Task 1: Restructure _pkgdown.yml with reference grouping** - `c494afc` (docs)
 2. **Task 2: Build pkgdown site and verify** - No commit (build verification only, docs/ is git-ignored)
 
-**Plan metadata:** (to be added after SUMMARY commit)
+**Plan metadata:** `bb819e0` (docs: complete plan)
 
 ## Files Created/Modified
 - `_pkgdown.yml` - Added reference section with 7 task-based groups plus articles organization
