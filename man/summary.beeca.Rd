@@ -36,7 +36,17 @@ summary(fit1, conf.level = 0.90)
 
 }
 \seealso{
+\code{\link[=get_marginal_effect]{get_marginal_effect()}} for the main analysis function
+
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined analysis pipeline
+
 \code{\link[=print.beeca]{print.beeca()}} for concise output
 
 \code{\link[=tidy.beeca]{tidy.beeca()}} for broom-compatible output
+
+\code{\link[=plot.beeca]{plot.beeca()}} for visualizations
+
+\code{\link[=augment.beeca]{augment.beeca()}} for augmented predictions
+
+\code{\link[=as_gt]{as_gt()}} for publication-ready tables
 }

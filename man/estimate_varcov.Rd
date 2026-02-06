@@ -90,23 +90,29 @@ print(fit4_ye$robust_varcov)
 
 }
 \references{
-Ye T. et al. (2023) Robust variance
-estimation for covariate-adjusted unconditional treatment effect in randomized
-clinical trials with binary outcomes. Statistical Theory and Related Fields
+Ye, T., Shao, J., Yi, Y., and Zhao, Q. (2023). "Robust Variance
+Estimation for Covariate-Adjusted Unconditional Treatment Effect in Randomized
+Clinical Trials with Binary Outcomes." \emph{Statistical Theory and Related Fields}
+7(2): 159-163. \url{https://doi.org/10.1080/24754269.2023.2205802}
 
-Ge M. et al. (2011) Covariate-Adjusted
-Difference in Proportions from Clinical Trials Using Logistic Regression
-and Weighted Risk Differences. Drug Information Journal.
+Ge, M., Durham, L. K., Meyer, R. D., Xie, W., and Flournoy, N. (2011).
+"Covariate-Adjusted Difference in Proportions from Clinical Trials Using Logistic
+Regression and Weighted Risk Differences." \emph{Drug Information Journal} 45(4): 481-493.
+\url{https://doi.org/10.1177/009286151104500409}
 
-Bannick, M. S., et al. A General Form of Covariate Adjustment in
-Randomized Clinical Trials. arXiv preprint arXiv:2306.10213 (2023).
+Bannick, M. S., Jun, Y., Josey, K., Weinberg, C. R., and Karlson, E. W.
+(2023). "A General Form of Covariate Adjustment in Randomized Clinical Trials."
+arXiv preprint arXiv:2306.10213. \url{https://arxiv.org/abs/2306.10213}
 }
 \seealso{
-\code{\link[=average_predictions]{average_predictions()}} for averaging counterfactual
-predictions.
+\code{\link[=predict_counterfactuals]{predict_counterfactuals()}} for generating counterfactual predictions
 
-\code{\link[=apply_contrast]{apply_contrast()}} for computing a summary measure.
+\code{\link[=average_predictions]{average_predictions()}} for averaging counterfactual predictions
+
+\code{\link[=apply_contrast]{apply_contrast()}} for computing a summary measure
 
 \code{\link[=get_marginal_effect]{get_marginal_effect()}} for estimating marginal effects directly
 from an original \code{\link[stats]{glm}} object
+
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined analysis pipeline
 }

@@ -30,27 +30,30 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' library(beeca)
-#' library(gt)
+#' if (requireNamespace("gt", quietly = TRUE)) {
+#'   # Fit model
+#'   trial01$trtp <- factor(trial01$trtp)
+#'   fit <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+#'     get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
 #'
-#' # Fit model
-#' trial01$trtp <- factor(trial01$trtp)
-#' fit <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-#'   get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
-#'
-#' # Create clinical trial table
-#' as_gt(fit,
-#'   title = "Table 14.2.1: Primary Efficacy Analysis",
-#'   subtitle = "Response Rate by Treatment Group",
-#'   source_note = paste("Risk difference estimated using g-computation",
-#'                       "with robust variance (Ye et al. 2023)"),
-#'   analysis_set = "Full Analysis Set (FAS)"
-#' )
+#'   # Create clinical trial table
+#'   as_gt(fit,
+#'     title = "Table 14.2.1: Primary Efficacy Analysis",
+#'     subtitle = "Response Rate by Treatment Group",
+#'     source_note = paste("Risk difference estimated using g-computation",
+#'                         "with robust variance (Ye et al. 2023)"),
+#'     analysis_set = "Full Analysis Set (FAS)"
+#'   )
 #' }
 #'
+#' @seealso [get_marginal_effect()] for the main analysis function
+#' @seealso [beeca_fit()] for streamlined analysis pipeline
 #' @seealso [tidy.beeca()] for data frame output
 #' @seealso [summary.beeca()] for console output
+#' @seealso [print.beeca()] for concise output
+#' @seealso [plot.beeca()] and [plot_forest()] for visualizations
+#' @seealso [beeca_summary_table()] for simpler data frame alternative
+#' @seealso [beeca_to_cards_ard()] for cards ARD integration
 as_gt <- function(x, ...) {
   UseMethod("as_gt")
 }

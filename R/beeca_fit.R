@@ -48,7 +48,6 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # Simple two-arm analysis
 #' fit <- beeca_fit(
 #'   data = trial01,
@@ -56,37 +55,25 @@
 #'   treatment = "trtp",
 #'   covariates = "bl_cov",
 #'   method = "Ye",
-#'   contrast = "diff"
+#'   contrast = "diff",
+#'   verbose = FALSE
 #' )
 #'
 #' # View results
 #' print(fit)
 #' summary(fit)
 #'
-#' # Multiple covariates
-#' fit2 <- beeca_fit(
-#'   data = trial01,
-#'   outcome = "aval",
-#'   treatment = "trtp",
-#'   covariates = c("bl_cov", "age", "sex"),
-#'   method = "Ye",
-#'   contrast = "rr"
-#' )
-#'
-#' # With stratification
-#' fit3 <- beeca_fit(
-#'   data = trial01,
-#'   outcome = "aval",
-#'   treatment = "trtp",
-#'   covariates = "bl_cov",
-#'   strata = "region",
-#'   method = "Ye"
-#' )
-#' }
-#'
 #' @seealso [get_marginal_effect()] for the underlying estimation function
+#' @seealso [predict_counterfactuals()] for counterfactual prediction step
+#' @seealso [average_predictions()] for averaging step
+#' @seealso [estimate_varcov()] for variance estimation step
+#' @seealso [apply_contrast()] for contrast computation step
 #' @seealso [tidy.beeca()] for extracting results
 #' @seealso [summary.beeca()] for detailed output
+#' @seealso [print.beeca()] for concise output
+#' @seealso [plot.beeca()] and [plot_forest()] for visualizations
+#' @seealso [augment.beeca()] for augmented predictions
+#' @seealso [as_gt()] for publication-ready tables
 beeca_fit <- function(data,
                       outcome,
                       treatment,

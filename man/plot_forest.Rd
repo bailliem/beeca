@@ -53,29 +53,38 @@ The plot can be customized using standard ggplot2 functions by adding
 layers to the returned ggplot object.
 }
 \examples{
-\dontrun{
-trial01$trtp <- factor(trial01$trtp)
-fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  trial01$trtp <- factor(trial01$trtp)
+  fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+    get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
 
-# Basic forest plot
-plot_forest(fit1)
+  # Basic forest plot
+  plot_forest(fit1)
 
-# Customize with ggplot2
-library(ggplot2)
-plot_forest(fit1) +
-  theme_minimal() +
-  labs(title = "Treatment Effect: My Study")
+  # Customize with ggplot2
+  plot_forest(fit1) +
+    ggplot2::theme_minimal() +
+    ggplot2::labs(title = "Treatment Effect: My Study")
 
-# Risk ratio example
-fit_rr <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "rr", reference = "0")
-plot_forest(fit_rr)
+  # Risk ratio example
+  fit_rr <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+    get_marginal_effect(trt = "trtp", method = "Ye", contrast = "rr", reference = "0")
+  plot_forest(fit_rr)
 }
 
 }
 \seealso{
+\code{\link[=get_marginal_effect]{get_marginal_effect()}} for the main analysis function
+
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined analysis pipeline
+
 \code{\link[=plot.beeca]{plot.beeca()}} for the generic plot method
 
 \code{\link[=tidy.beeca]{tidy.beeca()}} for extracting estimates in tabular form
+
+\code{\link[=print.beeca]{print.beeca()}} for concise output
+
+\code{\link[=summary.beeca]{summary.beeca()}} for detailed summary output
+
+\code{\link[=as_gt]{as_gt()}} for publication-ready tables
 }

@@ -58,17 +58,22 @@
 #' # Access counterfactual predictions for treatment level 1
 #' augmented$.counterfactual_1
 #'
-#' \dontrun{
-#' # Examine predictions by baseline covariate
-#' library(ggplot2)
-#' ggplot(augmented, aes(x = bl_cov, y = .counterfactual_1 - .counterfactual_0)) +
-#'   geom_point() +
-#'   labs(y = "Individual Treatment Effect")
+#' if (requireNamespace("ggplot2", quietly = TRUE)) {
+#'   # Examine predictions by baseline covariate
+#'   library(ggplot2)
+#'   ggplot(augmented, aes(x = bl_cov, y = .counterfactual_1 - .counterfactual_0)) +
+#'     geom_point() +
+#'     labs(y = "Individual Treatment Effect")
 #' }
 #'
 #' @seealso [get_marginal_effect()] for the main analysis function
-#' @seealso [tidy.beeca()] for tidied parameter estimates
+#' @seealso [beeca_fit()] for streamlined analysis pipeline
 #' @seealso [predict_counterfactuals()] for the underlying prediction method
+#' @seealso [tidy.beeca()] for tidied parameter estimates
+#' @seealso [print.beeca()] for concise output
+#' @seealso [summary.beeca()] for detailed summary output
+#' @seealso [plot.beeca()] and [plot_forest()] for visualizations
+#' @seealso [as_gt()] for publication-ready tables
 augment.beeca <- function(x, data = NULL, newdata = NULL,
                           type.predict = "response",
                           type.residuals = "deviance", ...) {

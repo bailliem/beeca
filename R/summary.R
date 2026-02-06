@@ -26,8 +26,13 @@
 #' # With 90% confidence intervals
 #' summary(fit1, conf.level = 0.90)
 #'
+#' @seealso [get_marginal_effect()] for the main analysis function
+#' @seealso [beeca_fit()] for streamlined analysis pipeline
 #' @seealso [print.beeca()] for concise output
 #' @seealso [tidy.beeca()] for broom-compatible output
+#' @seealso [plot.beeca()] for visualizations
+#' @seealso [augment.beeca()] for augmented predictions
+#' @seealso [as_gt()] for publication-ready tables
 summary.beeca <- function(object, conf.level = 0.95, digits = 4, ...) {
 
   cat("\n")

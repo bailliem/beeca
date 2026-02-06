@@ -77,19 +77,29 @@ head(augmented)
 # Access counterfactual predictions for treatment level 1
 augmented$.counterfactual_1
 
-\dontrun{
-# Examine predictions by baseline covariate
-library(ggplot2)
-ggplot(augmented, aes(x = bl_cov, y = .counterfactual_1 - .counterfactual_0)) +
-  geom_point() +
-  labs(y = "Individual Treatment Effect")
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  # Examine predictions by baseline covariate
+  library(ggplot2)
+  ggplot(augmented, aes(x = bl_cov, y = .counterfactual_1 - .counterfactual_0)) +
+    geom_point() +
+    labs(y = "Individual Treatment Effect")
 }
 
 }
 \seealso{
 \code{\link[=get_marginal_effect]{get_marginal_effect()}} for the main analysis function
 
-\code{\link[=tidy.beeca]{tidy.beeca()}} for tidied parameter estimates
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined analysis pipeline
 
 \code{\link[=predict_counterfactuals]{predict_counterfactuals()}} for the underlying prediction method
+
+\code{\link[=tidy.beeca]{tidy.beeca()}} for tidied parameter estimates
+
+\code{\link[=print.beeca]{print.beeca()}} for concise output
+
+\code{\link[=summary.beeca]{summary.beeca()}} for detailed summary output
+
+\code{\link[=plot.beeca]{plot.beeca()}} and \code{\link[=plot_forest]{plot_forest()}} for visualizations
+
+\code{\link[=as_gt]{as_gt()}} for publication-ready tables
 }

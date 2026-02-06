@@ -23,22 +23,34 @@ forest plots showing treatment effect estimates with confidence intervals.
 Additional plot types will be added in future versions.
 }
 \examples{
-\dontrun{
-trial01$trtp <- factor(trial01$trtp)
-fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  trial01$trtp <- factor(trial01$trtp)
+  fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+    get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
 
-# Forest plot (default)
-plot(fit1)
+  # Forest plot (default)
+  plot(fit1)
 
-# Explicit type specification
-plot(fit1, type = "forest")
+  # Explicit type specification
+  plot(fit1, type = "forest")
 
-# Customize
-plot(fit1, conf.level = 0.90, title = "My Treatment Effect")
+  # Customize
+  plot(fit1, conf.level = 0.90, title = "My Treatment Effect")
 }
 
 }
 \seealso{
+\code{\link[=get_marginal_effect]{get_marginal_effect()}} for the main analysis function
+
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined analysis pipeline
+
 \code{\link[=plot_forest]{plot_forest()}} for forest plot details
+
+\code{\link[=print.beeca]{print.beeca()}} for concise output
+
+\code{\link[=summary.beeca]{summary.beeca()}} for detailed summary output
+
+\code{\link[=tidy.beeca]{tidy.beeca()}} for tidied parameter estimates
+
+\code{\link[=as_gt]{as_gt()}} for publication-ready tables
 }

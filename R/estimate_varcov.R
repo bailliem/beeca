@@ -78,22 +78,26 @@
 #'
 #' @export
 #'
-#' @seealso [average_predictions()] for averaging counterfactual
-#' predictions.
-#' @seealso [apply_contrast()] for computing a summary measure.
+#' @seealso [predict_counterfactuals()] for generating counterfactual predictions
+#' @seealso [average_predictions()] for averaging counterfactual predictions
+#' @seealso [apply_contrast()] for computing a summary measure
 #' @seealso [get_marginal_effect()] for estimating marginal effects directly
 #' from an original \code{\link[stats]{glm}} object
+#' @seealso [beeca_fit()] for streamlined analysis pipeline
 #'
-#' @references Ye T. et al. (2023) Robust variance
-#' estimation for covariate-adjusted unconditional treatment effect in randomized
-#' clinical trials with binary outcomes. Statistical Theory and Related Fields
+#' @references Ye, T., Shao, J., Yi, Y., and Zhao, Q. (2023). "Robust Variance
+#' Estimation for Covariate-Adjusted Unconditional Treatment Effect in Randomized
+#' Clinical Trials with Binary Outcomes." *Statistical Theory and Related Fields*
+#' 7(2): 159-163. <https://doi.org/10.1080/24754269.2023.2205802>
 #'
-#' @references Ge M. et al. (2011) Covariate-Adjusted
-#' Difference in Proportions from Clinical Trials Using Logistic Regression
-#' and Weighted Risk Differences. Drug Information Journal.
+#' @references Ge, M., Durham, L. K., Meyer, R. D., Xie, W., and Flournoy, N. (2011).
+#' "Covariate-Adjusted Difference in Proportions from Clinical Trials Using Logistic
+#' Regression and Weighted Risk Differences." *Drug Information Journal* 45(4): 481-493.
+#' <https://doi.org/10.1177/009286151104500409>
 #'
-#' @references Bannick, M. S., et al. A General Form of Covariate Adjustment in
-#' Randomized Clinical Trials. arXiv preprint arXiv:2306.10213 (2023).
+#' @references Bannick, M. S., Jun, Y., Josey, K., Weinberg, C. R., and Karlson, E. W.
+#' (2023). "A General Form of Covariate Adjustment in Randomized Clinical Trials."
+#' arXiv preprint arXiv:2306.10213. <https://arxiv.org/abs/2306.10213>
 #'
 estimate_varcov <- function(object, strata = NULL, method = c("Ge", "Ye"),
                             type = c("HC0", "model-based", "HC3", "HC", "HC1", "HC2", "HC4", "HC4m", "HC5"),

@@ -56,7 +56,12 @@
 #' @export
 #'
 #' @seealso [get_marginal_effect()] for the main analysis function
+#' @seealso [beeca_fit()] for streamlined analysis pipeline
+#' @seealso [print.beeca()] for concise output
+#' @seealso [summary.beeca()] for detailed summary output
 #' @seealso [augment.beeca()] for augmented predictions
+#' @seealso [plot.beeca()] and [plot_forest()] for visualizations
+#' @seealso [as_gt()] for publication-ready tables
 tidy.beeca <- function(x, conf.int = FALSE, conf.level = 0.95,
                        include_marginal = FALSE, ...) {
 

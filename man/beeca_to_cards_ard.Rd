@@ -52,29 +52,34 @@ available.
 }
 
 \examples{
-\dontrun{
-# Fit model and get beeca results
-trial01$trtp <- factor(trial01$trtp)
-fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+if (requireNamespace("cards", quietly = TRUE)) {
+  # Fit model and get beeca results
+  trial01$trtp <- factor(trial01$trtp)
+  fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+    get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
 
-# Convert to cards format
-cards_ard <- beeca_to_cards_ard(fit1$marginal_results)
+  # Convert to cards format
+  cards_ard <- beeca_to_cards_ard(fit1$marginal_results)
 
-# Print the cards ARD (uses print method for 'card' class)
-print(cards_ard)
+  # Print the cards ARD (uses print method for 'card' class)
+  print(cards_ard)
 
-# Bind with other cards ARDs
-combined_ard <- cards::bind_ard(
-  cards_ard,
-  cards::ard_continuous(trial01, by = trtp, variables = bl_cov)
-)
+  # Bind with other cards ARDs
+  combined_ard <- cards::bind_ard(
+    cards_ard,
+    cards::ard_continuous(trial01, by = trtp, variables = bl_cov)
+  )
 }
 
 }
 \seealso{
-\itemize{
-\item \code{\link[=get_marginal_effect]{get_marginal_effect()}} for creating the input \code{marginal_results}
-\item \code{vignette("ard-cards-integration")} for detailed integration examples
-}
+\code{\link[=get_marginal_effect]{get_marginal_effect()}} for creating the input \code{marginal_results}
+
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined analysis pipeline
+
+\code{\link[=as_gt]{as_gt()}} for publication-ready tables
+
+\code{\link[=tidy.beeca]{tidy.beeca()}} for broom-compatible output
+
+\code{vignette("ard-cards-integration")} for detailed integration examples
 }

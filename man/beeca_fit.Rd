@@ -74,7 +74,6 @@ For more control over the analysis, use \code{glm()} followed by
 \code{get_marginal_effect()} directly.
 }
 \examples{
-\dontrun{
 # Simple two-arm analysis
 fit <- beeca_fit(
   data = trial01,
@@ -82,39 +81,35 @@ fit <- beeca_fit(
   treatment = "trtp",
   covariates = "bl_cov",
   method = "Ye",
-  contrast = "diff"
+  contrast = "diff",
+  verbose = FALSE
 )
 
 # View results
 print(fit)
 summary(fit)
 
-# Multiple covariates
-fit2 <- beeca_fit(
-  data = trial01,
-  outcome = "aval",
-  treatment = "trtp",
-  covariates = c("bl_cov", "age", "sex"),
-  method = "Ye",
-  contrast = "rr"
-)
-
-# With stratification
-fit3 <- beeca_fit(
-  data = trial01,
-  outcome = "aval",
-  treatment = "trtp",
-  covariates = "bl_cov",
-  strata = "region",
-  method = "Ye"
-)
-}
-
 }
 \seealso{
 \code{\link[=get_marginal_effect]{get_marginal_effect()}} for the underlying estimation function
 
+\code{\link[=predict_counterfactuals]{predict_counterfactuals()}} for counterfactual prediction step
+
+\code{\link[=average_predictions]{average_predictions()}} for averaging step
+
+\code{\link[=estimate_varcov]{estimate_varcov()}} for variance estimation step
+
+\code{\link[=apply_contrast]{apply_contrast()}} for contrast computation step
+
 \code{\link[=tidy.beeca]{tidy.beeca()}} for extracting results
 
 \code{\link[=summary.beeca]{summary.beeca()}} for detailed output
+
+\code{\link[=print.beeca]{print.beeca()}} for concise output
+
+\code{\link[=plot.beeca]{plot.beeca()}} and \code{\link[=plot_forest]{plot_forest()}} for visualizations
+
+\code{\link[=augment.beeca]{augment.beeca()}} for augmented predictions
+
+\code{\link[=as_gt]{as_gt()}} for publication-ready tables
 }

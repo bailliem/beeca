@@ -64,28 +64,37 @@ treatment effect estimates with confidence intervals, and supports
 customization for titles, footnotes, and analysis set information.
 }
 \examples{
-\dontrun{
-library(beeca)
-library(gt)
+if (requireNamespace("gt", quietly = TRUE)) {
+  # Fit model
+  trial01$trtp <- factor(trial01$trtp)
+  fit <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+    get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
 
-# Fit model
-trial01$trtp <- factor(trial01$trtp)
-fit <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
-
-# Create clinical trial table
-as_gt(fit,
-  title = "Table 14.2.1: Primary Efficacy Analysis",
-  subtitle = "Response Rate by Treatment Group",
-  source_note = paste("Risk difference estimated using g-computation",
-                      "with robust variance (Ye et al. 2023)"),
-  analysis_set = "Full Analysis Set (FAS)"
-)
+  # Create clinical trial table
+  as_gt(fit,
+    title = "Table 14.2.1: Primary Efficacy Analysis",
+    subtitle = "Response Rate by Treatment Group",
+    source_note = paste("Risk difference estimated using g-computation",
+                        "with robust variance (Ye et al. 2023)"),
+    analysis_set = "Full Analysis Set (FAS)"
+  )
 }
 
 }
 \seealso{
+\code{\link[=get_marginal_effect]{get_marginal_effect()}} for the main analysis function
+
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined analysis pipeline
+
 \code{\link[=tidy.beeca]{tidy.beeca()}} for data frame output
 
 \code{\link[=summary.beeca]{summary.beeca()}} for console output
+
+\code{\link[=print.beeca]{print.beeca()}} for concise output
+
+\code{\link[=plot.beeca]{plot.beeca()}} and \code{\link[=plot_forest]{plot_forest()}} for visualizations
+
+\code{\link[=beeca_summary_table]{beeca_summary_table()}} for simpler data frame alternative
+
+\code{\link[=beeca_to_cards_ard]{beeca_to_cards_ard()}} for cards ARD integration
 }

@@ -35,28 +35,32 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' trial01$trtp <- factor(trial01$trtp)
-#' fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-#'   get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+#' if (requireNamespace("ggplot2", quietly = TRUE)) {
+#'   trial01$trtp <- factor(trial01$trtp)
+#'   fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+#'     get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
 #'
-#' # Basic forest plot
-#' plot_forest(fit1)
+#'   # Basic forest plot
+#'   plot_forest(fit1)
 #'
-#' # Customize with ggplot2
-#' library(ggplot2)
-#' plot_forest(fit1) +
-#'   theme_minimal() +
-#'   labs(title = "Treatment Effect: My Study")
+#'   # Customize with ggplot2
+#'   plot_forest(fit1) +
+#'     ggplot2::theme_minimal() +
+#'     ggplot2::labs(title = "Treatment Effect: My Study")
 #'
-#' # Risk ratio example
-#' fit_rr <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-#'   get_marginal_effect(trt = "trtp", method = "Ye", contrast = "rr", reference = "0")
-#' plot_forest(fit_rr)
+#'   # Risk ratio example
+#'   fit_rr <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+#'     get_marginal_effect(trt = "trtp", method = "Ye", contrast = "rr", reference = "0")
+#'   plot_forest(fit_rr)
 #' }
 #'
+#' @seealso [get_marginal_effect()] for the main analysis function
+#' @seealso [beeca_fit()] for streamlined analysis pipeline
 #' @seealso [plot.beeca()] for the generic plot method
 #' @seealso [tidy.beeca()] for extracting estimates in tabular form
+#' @seealso [print.beeca()] for concise output
+#' @seealso [summary.beeca()] for detailed summary output
+#' @seealso [as_gt()] for publication-ready tables
 plot_forest <- function(x,
                         conf.level = 0.95,
                         title = NULL,

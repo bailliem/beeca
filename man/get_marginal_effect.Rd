@@ -87,3 +87,28 @@ fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
   get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
 fit1$marginal_results
 }
+\seealso{
+\code{\link[=predict_counterfactuals]{predict_counterfactuals()}} for generating counterfactual predictions
+
+\code{\link[=average_predictions]{average_predictions()}} for averaging counterfactual predictions
+
+\code{\link[=estimate_varcov]{estimate_varcov()}} for robust variance estimation
+
+\code{\link[=apply_contrast]{apply_contrast()}} for computing treatment contrasts
+
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined convenience wrapper
+
+\code{\link[=tidy.beeca]{tidy.beeca()}} for tidied parameter estimates
+
+\code{\link[=summary.beeca]{summary.beeca()}} for detailed summary output
+
+\code{\link[=print.beeca]{print.beeca()}} for concise output
+
+\code{\link[=plot.beeca]{plot.beeca()}} and \code{\link[=plot_forest]{plot_forest()}} for visualizations
+
+\code{\link[=augment.beeca]{augment.beeca()}} for augmented data with predictions
+
+\code{\link[=as_gt]{as_gt()}} for publication-ready tables
+
+\code{\link[=beeca_to_cards_ard]{beeca_to_cards_ard()}} for cards ARD integration
+}

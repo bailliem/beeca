@@ -64,5 +64,15 @@ tidy(fit1, include_marginal = TRUE, conf.int = TRUE)
 \seealso{
 \code{\link[=get_marginal_effect]{get_marginal_effect()}} for the main analysis function
 
+\code{\link[=beeca_fit]{beeca_fit()}} for streamlined analysis pipeline
+
+\code{\link[=print.beeca]{print.beeca()}} for concise output
+
+\code{\link[=summary.beeca]{summary.beeca()}} for detailed summary output
+
 \code{\link[=augment.beeca]{augment.beeca()}} for augmented predictions
+
+\code{\link[=plot.beeca]{plot.beeca()}} and \code{\link[=plot_forest]{plot_forest()}} for visualizations
+
+\code{\link[=as_gt]{as_gt()}} for publication-ready tables
 }
