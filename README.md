@@ -15,12 +15,12 @@ The goal of **beeca** is to provide an implementation solution with a simple use
 
 Type | Source | Command
 ---|---|---
-Release | CRAN | `install.packages("beeca")`
 Development | GitHub | `remotes::install_github("openpharma/beeca")`
+Release | CRAN | `install.packages("beeca")`
 
 ## Methodology
 
-Motivated by the recent [FDA guidance (2023)](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adjusting-covariates-randomized-clinical-trials-drugs-and-biological-products) on "Adjusting for Covariates in Randomized Clinical Trials for Drugs and Biological Products Guidance for Industry"" and its recommendations on robust variance estimation, we implemented two approaches, namely [Ge et al. (2011)](https://link.springer.com/article/10.1177/009286151104500409) and [Ye et al. (2023)](https://doi.org/10.1080/24754269.2023.2205802), to perform variance estimation for a treatment effect estimator based on g-computation under a logistic regression working model.
+Motivated by the recent [FDA guidance (2023)](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adjusting-covariates-randomized-clinical-trials-drugs-and-biological-products) on "Adjusting for Covariates in Randomized Clinical Trials for Drugs and Biological Products Guidance for Industry" and its recommendations on robust variance estimation, we implemented two approaches, namely [Ge et al. (2011)](https://link.springer.com/article/10.1177/009286151104500409) and [Ye et al. (2023)](https://doi.org/10.1080/24754269.2023.2205802), to perform variance estimation for a treatment effect estimator based on g-computation under a logistic regression working model.
 
 ## Scope
 
