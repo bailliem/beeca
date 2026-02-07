@@ -51,7 +51,7 @@
 |---------|--------|
 | Multi-timepoint longitudinal GEE | Requires companion package (beecal), not beeca's identity |
 | Ye et al. method for GEE | Assumes independence, not valid for correlated data |
-| gee package support | Older package, lower priority — can add later if needed |
+| gee package support | Older package, lower priority -- can add later if needed |
 | CRAN submission | GitHub release only for v0.4.0 |
 | ARD improvements | Deferred to v0.5.0 milestone |
 
@@ -59,30 +59,30 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| VALID-01 | — | Pending |
-| VALID-02 | — | Pending |
-| VALID-03 | — | Pending |
-| VAR-01 | — | Pending |
-| VAR-02 | — | Pending |
-| VAR-03 | — | Pending |
-| VAR-04 | — | Pending |
-| VAR-05 | — | Pending |
-| PIPE-01 | — | Pending |
-| PIPE-02 | — | Pending |
-| PIPE-03 | — | Pending |
-| PIPE-04 | — | Pending |
-| TEST-01 | — | Pending |
-| TEST-02 | — | Pending |
-| TEST-03 | — | Pending |
-| DOC-01 | — | Pending |
-| DOC-02 | — | Pending |
-| DOC-03 | — | Pending |
+| VALID-01 | Phase 5 | Pending |
+| VALID-02 | Phase 5 | Pending |
+| VALID-03 | Phase 5 | Pending |
+| VAR-01 | Phase 5 | Pending |
+| VAR-02 | Phase 5 | Pending |
+| VAR-03 | Phase 5 | Pending |
+| VAR-04 | Phase 5 | Pending |
+| VAR-05 | Phase 5 | Pending |
+| PIPE-01 | Phase 5 | Pending |
+| PIPE-02 | Phase 5 | Pending |
+| PIPE-03 | Phase 5 | Pending |
+| PIPE-04 | Phase 5 | Pending |
+| TEST-01 | Phase 6 | Pending |
+| TEST-02 | Phase 6 | Pending |
+| TEST-03 | Phase 6 | Pending |
+| DOC-01 | Phase 7 | Pending |
+| DOC-02 | Phase 7 | Pending |
+| DOC-03 | Phase 7 | Pending |
 
 **Coverage:**
 - v0.4.0 requirements: 18 total
-- Mapped to phases: 0
-- Unmapped: 18
+- Mapped to phases: 18
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-07*
-*Last updated: 2026-02-07 after initial definition*
+*Last updated: 2026-02-07 after roadmap creation*
