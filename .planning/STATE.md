@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-31)
 
 **Core value:** All R CMD checks pass with no errors or warnings
-**Current focus:** Phase 2 - Documentation Review
+**Current focus:** Phase 3 - Vignette Review
 
 ## Current Position
 
-Phase: 2 of 4 (Documentation Review)
-Plan: 3 of 3 complete
-Status: Phase complete
-Last activity: 2026-02-06 — Completed 02-03-PLAN.md (Pkgdown site restructure)
+Phase: 3 of 4 (Vignette Review)
+Plan: 1 of 3 complete
+Status: In progress
+Last activity: 2026-02-07 — Completed 03-01-PLAN.md (Estimand vignette polish)
 
-Progress: [███████░░░] 70%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 13 min
-- Total execution time: 89 min
+- Total plans completed: 8
+- Average duration: 11 min
+- Total execution time: 92 min
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [███████░░░] 70%
 | 01-build-validation | 2/2 | 7 min | 3.5 min |
 | 01.1-gee-longitudinal-feasibility | 2/2 | 71 min | 35.5 min |
 | 02-documentation-review | 3/3 | 11 min | 3.7 min |
+| 03-vignette-review | 1/3 | 3 min | 3.0 min |
 
 **Recent Trend:**
-- Last 5 plans: 01.1-02 (63min), 02-02 (2min), 02-01 (8min), 02-03 (1min)
-- Trend: Documentation updates are extremely fast (1-8min), research phases take longer (8-63min)
+- Last 5 plans: 02-02 (2min), 02-01 (8min), 02-03 (1min), 03-01 (3min)
+- Trend: Documentation updates consistently fast (1-8min), vignette polish following pattern
 
 *Updated after each plan completion*
 
@@ -96,6 +97,14 @@ Recent decisions affecting current work:
 - Verified pkgdown site builds without errors (DOCS-03 requirement met)
 - All 26 man pages accounted for in reference grouping
 
+**From 03-01 (Estimand Vignette Polish):**
+- Problem-based hook instead of learning objectives boxes (more engaging for mixed audience)
+- Added "Which method should I use?" section mapping Ye to PATE (unconditional, FDA-recommended) and Ge to CPATE
+- Updated Magirr et al. reference from OSF preprint to Pharmaceutical Statistics 2025 published version
+- Removed package version numbers from all references (date quickly, reduce maintenance)
+- Added cross-vignette navigation links (clinical-trial-table, ard-cards-integration)
+- Kept trial01 for comparisons with explicit explanatory note (SAS validation datasets only exist for trial01)
+
 ### Roadmap Evolution
 
 - Phase 1.1 inserted after Phase 1: GEE Longitudinal Extension Feasibility (URGENT) — user feature request for extending beeca to support GEE/longitudinal binary endpoints with Mancl-DeRouen variance, Firth-penalised GEE, and MVT multiplicity adjustment. Detailed analysis saved in 01.1-ANALYSIS.md.
@@ -132,11 +141,20 @@ None yet.
   - Site builds without errors
   - All cross-references resolve correctly
 
+**Phase 3 In Progress - Vignette Review:**
+- ✓ Plan 01 complete: Estimand vignette polished
+  - Problem-based hook + teaser code snippet
+  - "Which method should I use?" guidance section
+  - Updated references (Magirr 2025, no version numbers)
+  - Cross-vignette navigation links
+  - Comparison section with subheadings
+- Next: Plan 02 (Clinical trial table vignette polish)
+
 **No blocking issues.**
 
 ## Session Continuity
 
-Last session: 2026-02-06T21:17:30Z
-Stopped at: Completed 02-03-PLAN.md (Pkgdown site restructure)
+Last session: 2026-02-07T07:31:38Z
+Stopped at: Completed 03-01-PLAN.md (Estimand vignette polish)
 Resume file: None
-Next step: Phase 2 complete - proceed to Phase 3 or release preparation
+Next step: Plan 03-02 (Clinical trial table vignette polish)
