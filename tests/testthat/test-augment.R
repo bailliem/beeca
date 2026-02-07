@@ -129,9 +129,10 @@ test_that("augment.beeca type.residuals = NULL excludes residuals", {
 })
 
 test_that("augment.beeca fails gracefully with non-beeca object", {
-  # Regular glm object without beeca class
   regular_glm <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01)
-
+  skip_if("augment.glm" %in% methods("augment"),
+          "another package provides augment.glm, so dispatch succeeds")
+  # Without such a method, augment() has no target for plain glm objects
   expect_error(
     augment(regular_glm),
     "no applicable method"
