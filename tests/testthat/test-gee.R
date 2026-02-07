@@ -378,7 +378,7 @@ test_that("glmgee end-to-end with diff contrast", {
   expect_false(is.null(result$robust_varcov))
 
   # Verify ARD structure
-  expect_true(tibble::is_tibble(result$marginal_results))
+  expect_true(inherits(result$marginal_results, "tbl_df"))
   expect_equal(nrow(result$marginal_results), 12)
   expect_equal(ncol(result$marginal_results), 8)
   expect_false(any(is.na(result$marginal_results)))
@@ -422,7 +422,7 @@ test_that("geeglm end-to-end with diff contrast", {
   expect_false(is.null(result$robust_varcov))
 
   # Verify ARD structure
-  expect_true(tibble::is_tibble(result$marginal_results))
+  expect_true(inherits(result$marginal_results, "tbl_df"))
   expect_equal(nrow(result$marginal_results), 12)
   expect_equal(ncol(result$marginal_results), 8)
 })
