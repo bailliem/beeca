@@ -4,32 +4,33 @@
 
 See: .planning/PROJECT.md (updated 2026-02-07)
 
-**Core value:** All R CMD checks pass with no errors or warnings
-**Current focus:** v0.3.0 shipped — planning next milestone
+**Core value:** GEE objects flow through beeca's g-computation pipeline with correct variance estimation
+**Current focus:** v0.4.0 GEE Extension — defining requirements
 
 ## Current Position
 
-Phase: Milestone complete
-Plan: N/A
-Status: Ready for next milestone
-Last activity: 2026-02-07 — v0.3.0 milestone archived and tagged
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-07 — Milestone v0.4.0 started
 
-Progress: [██████████] 100% (v0.3.0)
+Progress: [░░░░░░░░░░] 0% (v0.4.0)
 
 ## Performance Metrics
 
-**v0.3.0 Summary:**
+**v0.3.0 Summary (previous milestone):**
 - Total plans completed: 11
-- Average duration: 9 min
-- Total execution time: 103 min
 - Phases: 5 (1, 1.1, 2, 3, 4)
-- Timeline: 8 days (2026-01-31 → 2026-02-07)
+- Timeline: 8 days (2026-01-31 to 2026-02-07)
 
 ## Accumulated Context
 
 ### Decisions
 
-All decisions logged in PROJECT.md Key Decisions table.
+- GEE Option A (minimal, single-timepoint) selected
+- Ye method excluded for GEE (assumes independence)
+- GEE packages in Suggests (not Imports)
+- v0.4.0 GEE, v0.5.0 ARD (separate milestones)
 
 ### Roadmap Evolution
 
@@ -41,11 +42,11 @@ None.
 
 ### Blockers/Concerns
 
-None — milestone shipped.
+None.
 
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: v0.3.0 milestone complete
+Stopped at: Defining requirements for v0.4.0
 Resume file: None
-Next step: /gsd:new-milestone (for v0.4.0 or v1.0)
+Next step: Complete requirements and roadmap creation

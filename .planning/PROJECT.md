@@ -1,12 +1,12 @@
-# beeca v0.3.0 — Shipped
+# beeca — GEE Extension
 
 ## What This Is
 
-A release readiness review for beeca v0.3.0 — the R package for covariate-adjusted binary endpoint analysis has been validated, documented, polished, and released on GitHub. All tests pass, documentation is standardized, vignettes tell clear stories, and the package is ready for industry adoption.
+beeca is an R package for covariate-adjusted binary endpoint analysis in clinical trials. v0.4.0 extends the package to accept GEE (Generalized Estimating Equations) objects for single-timepoint covariate-adjusted analysis, broadening beeca's applicability to clustered/correlated data designs while preserving its focused, GxP-compliant identity.
 
 ## Core Value
 
-All R CMD checks pass with no errors or warnings — the gate for v0.3.0 achieved.
+GEE objects flow through beeca's existing g-computation pipeline with correct variance estimation — no regressions in existing GLM functionality.
 
 ## Requirements
 
@@ -17,26 +17,39 @@ All R CMD checks pass with no errors or warnings — the gate for v0.3.0 achieve
 - ✓ Five summary measures (diff, or, rr, logor, logrr) — existing
 - ✓ S3 methods (print, summary, tidy, augment, plot) — existing
 - ✓ ARD output format for pharmaceutical reporting — existing
-- ✓ Test suite with testthat (80+ test cases) — existing
-- ✓ Vignettes and pkgdown documentation — existing
+- ✓ Test suite with testthat (308 tests, 88.9% coverage) — v0.3.0
+- ✓ Vignettes and pkgdown documentation — v0.3.0
 - ✓ CI/CD via GitHub Actions — existing
 - ✓ R CMD check passes with no errors/warnings — v0.3.0
-- ✓ All tests pass (308 testthat tests, 88.9% coverage) — v0.3.0
-- ✓ Documentation accurate and complete (25+ man pages standardized) — v0.3.0
-- ✓ ARD vignette clear and informative with motivation scenario — v0.3.0
-- ✓ Clinical trial reporting vignette with complete workflow — v0.3.0
-- ✓ NEWS.md updated for v0.3.0 (tidyverse style) — v0.3.0
-- ✓ Version bumped to 0.3.0 in DESCRIPTION — v0.3.0
+- ✓ Documentation accurate and complete (25+ man pages) — v0.3.0
 
 ### Active
 
-(None — milestone complete. Next milestone will define new requirements.)
+- [ ] GEE objects accepted via sanitize_model S3 methods (glmgee, geeglm)
+- [ ] Ge delta method variance estimation routes to GEE's own vcov
+- [ ] Full pipeline works end-to-end for GEE objects (predict, average, varcov, contrast)
+- [ ] All five contrast types work with GEE objects
+- [ ] Tests for GEE extension with cross-validation
+- [ ] Documentation for GEE usage (man pages, vignette or vignette section)
+- [ ] R CMD check passes with no errors/warnings
 
 ### Out of Scope
 
-- CRAN submission — GitHub release only for v0.3.0
-- GEE/longitudinal extension — feasibility confirmed (CONDITIONAL GO), deferred to future version
-- Major refactoring — only issues found during review were fixed
+- Multi-timepoint longitudinal GEE — requires companion package (beecal), not beeca's scope
+- Ye et al. method for GEE — assumes independence, not extensible for correlated data
+- CRAN submission — GitHub release only for v0.4.0
+- ARD improvements — deferred to v0.5.0 milestone
+- Major refactoring — surgical changes only
+
+## Current Milestone: v0.4.0 GEE Extension
+
+**Goal:** Accept GEE objects (glmgee from glmtoolbox, geeglm from geepack) for single-timepoint covariate-adjusted binary endpoint analysis using the Ge delta method.
+
+**Target features:**
+- sanitize_model.glmgee() and sanitize_model.geeglm() S3 methods
+- Variance estimation routing to GEE's own vcov (robust, bias-corrected, df-adjusted)
+- End-to-end pipeline: GEE object through predict_counterfactuals, average_predictions, estimate_varcov, apply_contrast
+- Comprehensive tests and documentation
 
 ## Context
 
@@ -44,36 +57,46 @@ All R CMD checks pass with no errors or warnings — the gate for v0.3.0 achieve
 
 **Current state:** v0.3.0 shipped. 2,751 lines of R code, 308 tests passing, 88.9% coverage. Package validated against SAS %margins macro, {margins}, {marginaleffects}, and {RobinCar}.
 
+**GEE feasibility (completed):** Conditional go for Option A (minimal, single-timepoint). Empirical tests confirm predict(newdata) and vcov() work for both glmgee and geeglm. Pipeline needs 2-3 targeted changes. See `.planning/phases/01.1-gee-longitudinal-feasibility/` for full report.
+
+**Key findings from feasibility:**
+- predict(newdata, type='response') works for both GEE packages
+- vcov(type='robust') works for both GEE packages
+- sanitize_model needs new S3 methods (currently rejects GEE objects)
+- estimate_varcov needs routing to GEE vcov instead of sandwich::vcovHC
+- Ye method NOT extensible for GEE (assumes independence)
+- Manual Ge delta method test produced valid results
+
 **Key files:**
-- `R/` — 20+ function files (beeca_fit, get_marginal_effect, S3 methods, ARD utilities)
-- `vignettes/` — 3 polished vignettes with cross-references
-- `tests/testthat/` — 12 test suites, 308 tests
-- `man/` — 25+ standardized man pages
+- `R/sanitize.R` — S3 generic, needs glmgee/geeglm methods
+- `R/estimate_varcov.R` — Needs GEE variance routing
+- `R/predict_counterfactuals.R` — Will work once sanitize extended
+- `R/average_predictions.R` — Will work once predict_counterfactuals works
+- `.planning/phases/01.1-gee-longitudinal-feasibility/feasibility-test.R` — Empirical test script
 
 **Working group context:** Developed with ASA-BIOP Covariate Adjustment Scientific Working Group (carswg.github.io).
 
-**GEE feasibility:** Conditional go for Option A (minimal, single-timepoint). Scoped at 3.5 days, 4 phases. See `.planning/phases/01.1-gee-longitudinal-feasibility/` for full report.
+**Future milestone (v0.5.0):** ARD improvements — test coverage for beeca_to_cards_ard(), confidence intervals, metadata enrichment, converter infrastructure.
 
 ## Constraints
 
 - **Tech stack**: R package following CRAN conventions
 - **Compatibility**: Must maintain R >= 2.10 support as stated in DESCRIPTION
-- **Dependencies**: Keep minimal — dplyr, sandwich, generics, lifecycle, rlang, stats
+- **Dependencies**: Keep minimal — add glmtoolbox and geepack to Suggests (not Imports)
+- **Backward compatibility**: All 308 existing tests must continue to pass
+- **Scope**: Single-timepoint GEE only — no multi-timepoint longitudinal support
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
 | GitHub release (not CRAN) | Faster iteration, less overhead | ✓ Good |
-| Version 0.3.0 (minor bump) | New features since 0.2.0 warrant minor version | ✓ Good |
-| Focus on vignette quality | ARD/reporting examples key for adoption | ✓ Good |
 | trial02_cdisc as primary dataset | CDISC ADaM format, 3-arm design, industry standard | ✓ Good |
-| trial01 retained for cross-validation | Pre-computed SAS results available | ✓ Good |
 | Magirr et al. updated to published DOI | Published in Pharmaceutical Statistics 2025 | ✓ Good |
-| beeca_to_cards_ard() 0% coverage accepted | Working in vignette, minimal value for timeline | ⚠️ Revisit |
-| GEE extension conditional go (deferred) | Out of scope for v0.3.0, future version | — Pending |
-| ggplot2 deprecation fixed | geom_errorbarh → geom_errorbar for ggplot2 4.0.0 | ✓ Good |
-| Tidyverse-style NEWS.md | One-liner bullets, clear sections | ✓ Good |
+| GEE Option A (minimal, single-timepoint) | Preserves beeca identity, feasibility confirmed | — Pending |
+| Ye method excluded for GEE | Assumes independence, not valid for correlated data | — Pending |
+| GEE packages in Suggests (not Imports) | Keep beeca lightweight, GEE is optional capability | — Pending |
+| v0.4.0 GEE, v0.5.0 ARD | Separate milestones for cleaner scope and testing | — Pending |
 
 ---
-*Last updated: 2026-02-07 after v0.3.0 milestone*
+*Last updated: 2026-02-07 after v0.4.0 milestone start*
