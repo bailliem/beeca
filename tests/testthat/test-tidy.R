@@ -167,7 +167,9 @@ test_that("tidy.beeca works with different contrast types", {
 })
 
 test_that("tidy.beeca fails gracefully with non-beeca object", {
-  # Regular glm object without beeca class
+  skip_if(requireNamespace("broom", quietly = TRUE),
+          "broom provides tidy.glm, so dispatch succeeds")
+  # Without broom, tidy() has no method for plain glm objects
   regular_glm <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01)
 
   expect_error(

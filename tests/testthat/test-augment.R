@@ -129,7 +129,9 @@ test_that("augment.beeca type.residuals = NULL excludes residuals", {
 })
 
 test_that("augment.beeca fails gracefully with non-beeca object", {
-  # Regular glm object without beeca class
+  skip_if(requireNamespace("broom", quietly = TRUE),
+          "broom provides augment.glm, so dispatch succeeds")
+  # Without broom, augment() has no method for plain glm objects
   regular_glm <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01)
 
   expect_error(
