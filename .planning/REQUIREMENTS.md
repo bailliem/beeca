@@ -28,9 +28,9 @@ Requirements for v0.3.0 GitHub release.
 
 ### Release Prep
 
-- [ ] **REL-01**: NEWS.md updated with v0.3.0 changes
-- [ ] **REL-02**: DESCRIPTION version set to 0.3.0
-- [ ] **REL-03**: Any lifecycle deprecations properly handled
+- [x] **REL-01**: NEWS.md updated with v0.3.0 changes
+- [x] **REL-02**: DESCRIPTION version set to 0.3.0
+- [x] **REL-03**: Any lifecycle deprecations properly handled
 
 ## v2 Requirements
 
@@ -59,9 +59,9 @@ Requirements for v0.3.0 GitHub release.
 | VIG-01 | Phase 3 | Complete |
 | VIG-02 | Phase 3 | Complete |
 | VIG-03 | Phase 3 | Complete |
-| REL-01 | Phase 4 | Pending |
-| REL-02 | Phase 4 | Pending |
-| REL-03 | Phase 4 | Pending |
+| REL-01 | Phase 4 | Complete |
+| REL-02 | Phase 4 | Complete |
+| REL-03 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 13 total
@@ -70,4 +70,4 @@ Requirements for v0.3.0 GitHub release.
 
 ---
 *Requirements defined: 2026-01-31*
-*Last updated: 2026-02-07 after Phase 3 completion*
+*Last updated: 2026-02-07 after Phase 4 completion — all requirements complete*
