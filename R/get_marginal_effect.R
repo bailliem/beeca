@@ -88,6 +88,11 @@ get_marginal_effect <- function(object, trt, strata = NULL,
                                 reference, mod = FALSE) {
   object <- .assert_sanitized(object, trt)
 
+  # Handle GEE type default
+  if ((inherits(object, "glmgee") || inherits(object, "geeglm")) && type == "HC0") {
+    type <- "robust"
+  }
+
   object <- object |>
     predict_counterfactuals(trt) |>
     average_predictions() |>
@@ -96,7 +101,7 @@ get_marginal_effect <- function(object, trt, strata = NULL,
 
   data <- .get_data(object)
   n_trt_levels <- nlevels(data[[trt]])
-  outcome <- paste(object$formula[[2]])
+  outcome <- paste(.get_formula(object)[[2]])
 
   # Marginal results for each trt level
   marginal_responses <- data.frame(
