@@ -66,6 +66,10 @@ predict_counterfactuals <- function(object, trt) {
     X_cf <- data
     X_cf[, trt] <- trtlevel
     cf_pred <- predict(object, newdata = X_cf, type = "response")
+    # GEE predict methods return matrices, need to extract vector
+    if (is.matrix(cf_pred)) {
+      cf_pred <- as.vector(cf_pred)
+    }
     cf_preds[[trtlevel]] <- cf_pred
   }
 

@@ -115,15 +115,29 @@ estimate_varcov <- function(object, strata = NULL, method = c("Ge", "Ye"),
   object <- .assert_sanitized(object, trt, warn = T)
 
   method <- match.arg(method)
+
+  # Reject Ye method for GEE objects (assumes independence)
+  if (method == "Ye" && (inherits(object, "glmgee") || inherits(object, "geeglm"))) {
+    stop("Ye's method assumes independence and is not valid for GEE models. Use method='Ge' instead.",
+         call. = FALSE)
+  }
+
   if (method == "Ye") {
     varcov <- varcov_ye(object, trt, strata, mod)
   } else if (method == "Ge") {
-    type <- match.arg(type)
-    # Throw warning is strata supplied but method == "Ge" is specified
-    if (!is.null(strata)) {
-      warning("Strata is supplied but will be ignored when using method='Ge'", call. = FALSE)
+    if (inherits(object, "glmgee") || inherits(object, "geeglm")) {
+      # GEE objects use GEE-native variance types, not HC types
+      if (!is.null(strata)) {
+        warning("Strata is supplied but will be ignored when using method='Ge'", call. = FALSE)
+      }
+      varcov <- varcov_ge_gee(object, trt, type)
+    } else {
+      type <- match.arg(type)
+      if (!is.null(strata)) {
+        warning("Strata is supplied but will be ignored when using method='Ge'", call. = FALSE)
+      }
+      varcov <- varcov_ge(object, trt, type)
     }
-    varcov <- varcov_ge(object, trt, type)
   }
 
   # Assert varcov is symmetric
@@ -133,6 +147,11 @@ estimate_varcov <- function(object, strata = NULL, method = c("Ge", "Ye"),
   }
 
   object$robust_varcov <- varcov
+  # Use resolved_type attribute if available (from GEE routing)
+  resolved_type <- attr(varcov, "resolved_type")
+  if (!is.null(resolved_type)) {
+    type <- resolved_type
+  }
   attr(object$robust_varcov, "type") <- ifelse(method == "Ge", paste0(method, " - ", type), method)
 
   return(object)
@@ -303,7 +322,7 @@ varcov_ge <- function(object, trt, type) {
   for (trtlvl in levels(data[[trt]])) {
     X_i <- data
     X_i[, trt] <- factor(trtlvl, levels = levels(data[[trt]]))
-    X_i <- model.matrix(object$formula, X_i)
+    X_i <- model.matrix(.get_formula(object), X_i)
 
     # Compute derivative
     pderiv_i <- cf_pred[, trtlvl] * (1 - cf_pred[, trtlvl])
@@ -316,4 +335,71 @@ varcov_ge <- function(object, trt, type) {
   rownames(varcov_ge) <- colnames(varcov_ge) <- levels(data[[trt]])
 
   return(varcov_ge)
+}
+
+## GEE-specific Ge delta method variance
+## Uses GEE's own vcov instead of sandwich::vcovHC
+varcov_ge_gee <- function(object, trt, type) {
+  data <- .get_data(object)
+
+  # Determine valid variance types based on GEE class
+  if (inherits(object, "glmgee")) {
+    valid_types <- c("robust", "bias-corrected", "df-adjusted")
+    default_type <- "robust"
+    class_name <- "glmgee"
+  } else if (inherits(object, "geeglm")) {
+    valid_types <- c("robust")
+    default_type <- "robust"
+    class_name <- "geeglm"
+  }
+
+  # --- Type resolution ---
+  glm_types <- c("HC0", "model-based", "HC3", "HC", "HC1", "HC2", "HC4", "HC4m", "HC5")
+
+  if (length(type) > 1) {
+    # User did not specify type -- use GEE default silently
+    type <- default_type
+  } else if (type %in% glm_types) {
+    # User explicitly passed a GLM-style type name -- error with valid GEE types
+    stop(sprintf(
+      'Variance type "%s" is not supported for %s objects. Valid types: %s',
+      type, class_name, paste(valid_types, collapse = ", ")
+    ), call. = FALSE)
+  } else if (!type %in% valid_types) {
+    # User passed an unrecognized type -- error with valid GEE types
+    stop(sprintf(
+      'Variance type "%s" is not supported for %s objects. Valid types: %s',
+      type, class_name, paste(valid_types, collapse = ", ")
+    ), call. = FALSE)
+  }
+  # --- End type resolution ---
+
+  # Get GEE's own variance-covariance matrix of coefficients
+  if (inherits(object, "geeglm")) {
+    V <- stats::vcov(object)
+  } else {
+    V <- vcov(object, type = type)
+  }
+
+  # Delta method -- IDENTICAL to existing varcov_ge() from here
+  cf_pred <- object$counterfactual.predictions
+  frm <- .get_formula(object)
+
+  d_list <- list()
+  for (trtlvl in levels(data[[trt]])) {
+    X_i <- data
+    X_i[, trt] <- factor(trtlvl, levels = levels(data[[trt]]))
+    X_i <- model.matrix(frm, X_i)
+
+    pderiv_i <- cf_pred[, trtlvl] * (1 - cf_pred[, trtlvl])
+    d_i <- (t(pderiv_i) %*% as.matrix(X_i)) / nrow(X_i)
+    d_list[[trtlvl]] <- d_i
+  }
+
+  all_d <- do.call(rbind, d_list)
+  varcov <- all_d %*% V %*% t(all_d)
+  rownames(varcov) <- colnames(varcov) <- levels(data[[trt]])
+  attr(varcov, "resolved_type") <- type
+
+  return(varcov)
 }

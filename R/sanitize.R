@@ -312,6 +312,18 @@ sanitize_variable <- function(model, trt) {
   return(model$model)
 }
 
+.get_formula <- function(model) {
+  if (!is.null(model$formula)) return(model$formula)
+  if (!is.null(model$call$formula)) return(eval(model$call$formula))
+  tryCatch(
+    stats::formula(model),
+    error = function(e) {
+      stop("Cannot extract formula from model object of class ",
+           paste(class(model), collapse = "/"), call. = FALSE)
+    }
+  )
+}
+
 .assert_sanitized <- function(object, trt, warn = F) {
   if (is.null(object$sanitized) || object$sanitized == FALSE) {
     if (warn) {
