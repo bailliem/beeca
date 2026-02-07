@@ -90,6 +90,180 @@ sanitize_model.glm <- function(model, trt, ...) {
   return(model)
 }
 
+#' (internal) Sanitize a glmgee model
+#' @param model a glmgee object from \link[glmtoolbox]{glmgee} with binomial family canonical link.
+#' @param trt the name of the treatment variable on the right-hand side of the formula.
+#' @param ... ignored.
+#' @return if model is non-compliant will throw warnings or errors.
+#' @keywords internal
+#' @export
+sanitize_model.glmgee <- function(model, trt, ...) {
+  # Check package availability first (fail fast)
+  if (!requireNamespace("glmtoolbox", quietly = TRUE)) {
+    stop('glmtoolbox is required for glmgee objects. Install with install.packages("glmtoolbox")', call. = FALSE)
+  }
+
+  # sanitize variable (reuses existing helper)
+  sanitize_variable(model, trt)
+
+  # sanitize model
+  reasons_stop <- reasons_warn <- NULL
+
+  # check family and link function
+  if (model$family$family != "binomial" | model$family$link != "logit") {
+    reasons_stop <- c(reasons_stop, "not in the binomial family with logit link function")
+  }
+
+  # check interaction
+  if (any(attr(model$terms, "order") > 1)) {
+    interactions <- attr(model$terms, "term.labels")[which(attr(model$terms, "order") > 1)]
+    if (trt %in% unlist(strsplit(interactions, ":"))) {
+      reasons_stop <- c(reasons_stop, "with treatment-covariate interaction terms")
+    }
+  }
+
+  # check for single-timepoint data (GEE-specific)
+  # Extract cluster IDs - try model$id first
+  cluster_ids <- model$id
+  if (is.null(cluster_ids)) {
+    # Fallback: evaluate model$call$id against model data
+    id_expr <- model$call$id
+    if (!is.null(id_expr)) {
+      cluster_ids <- eval(id_expr, envir = .get_data(model))
+    }
+  }
+
+  if (!is.null(cluster_ids)) {
+    cluster_sizes <- table(cluster_ids)
+    n_multi <- sum(cluster_sizes > 1)
+    if (n_multi > 0) {
+      reasons_stop <- c(reasons_stop, sprintf("Multi-timepoint data detected: %s clusters have more than 1 observation. beeca currently supports single-timepoint GEE models only.", n_multi))
+    }
+  }
+
+  # check for full rank (if qr component exists)
+  if (!is.null(model$qr)) {
+    if (ncol(stats::model.matrix(model)) != model$qr$rank) {
+      reasons_stop <- c(reasons_stop, "The data does not have full rank, please check glmgee model fitting.")
+    }
+  }
+
+  # check convergence (glmgee retains $converged)
+  if (!is.null(model$converged) && !model$converged) {
+    reasons_warn <- c(reasons_warn, "The glmgee model was not converged, please check glmgee model fitting.")
+  }
+
+  # check for missing data (use .get_data for consistency)
+  model_data <- .get_data(model)
+  if (!is.null(model_data)) {
+    if (nrow(model_data) != nrow(stats::model.frame(model))) {
+      n_missing <- nrow(model_data) - nrow(stats::model.frame(model))
+      if (n_missing == 1) {
+        reasons_warn <- c(reasons_warn, "There is 1 record omitted from the original data due to missing values, please check if they should be imputed prior to model fitting.")
+      } else {
+        reasons_warn <- c(reasons_warn, sprintf("There are %s records omitted from the original data due to missing values, please check if they should be imputed prior to model fitting.", n_missing))
+      }
+    }
+  }
+
+  # print error messages
+  if (!is.null(reasons_stop)) {
+    msg_stop <- sapply(reasons_stop, function(x) c(sprintf("Model of class glmgee %s is not supported.", x), "\n"))
+    stop(msg_stop, call. = FALSE)
+  }
+
+  # print warning messages
+  if (!is.null(reasons_warn)) {
+    for (msg_warn in reasons_warn) warning(msg_warn, call. = FALSE)
+  }
+
+  model$sanitized <- TRUE
+
+  return(model)
+}
+
+#' (internal) Sanitize a geeglm model
+#' @param model a geeglm object from \link[geepack]{geeglm} with binomial family canonical link.
+#' @param trt the name of the treatment variable on the right-hand side of the formula.
+#' @param ... ignored.
+#' @return if model is non-compliant will throw warnings or errors.
+#' @keywords internal
+#' @export
+sanitize_model.geeglm <- function(model, trt, ...) {
+  # Check package availability first (fail fast)
+  if (!requireNamespace("geepack", quietly = TRUE)) {
+    stop('geepack is required for geeglm objects. Install with install.packages("geepack")', call. = FALSE)
+  }
+
+  # sanitize variable (reuses existing helper)
+  sanitize_variable(model, trt)
+
+  # sanitize model
+  reasons_stop <- reasons_warn <- NULL
+
+  # check family and link function
+  if (model$family$family != "binomial" | model$family$link != "logit") {
+    reasons_stop <- c(reasons_stop, "not in the binomial family with logit link function")
+  }
+
+  # check interaction
+  if (any(attr(model$terms, "order") > 1)) {
+    interactions <- attr(model$terms, "term.labels")[which(attr(model$terms, "order") > 1)]
+    if (trt %in% unlist(strsplit(interactions, ":"))) {
+      reasons_stop <- c(reasons_stop, "with treatment-covariate interaction terms")
+    }
+  }
+
+  # check for single-timepoint data (GEE-specific)
+  # geeglm stores cluster IDs in model$id
+  cluster_ids <- model$id
+  if (!is.null(cluster_ids)) {
+    cluster_sizes <- table(cluster_ids)
+    n_multi <- sum(cluster_sizes > 1)
+    if (n_multi > 0) {
+      reasons_stop <- c(reasons_stop, sprintf("Multi-timepoint data detected: %s clusters have more than 1 observation. beeca currently supports single-timepoint GEE models only.", n_multi))
+    }
+  }
+
+  # check for full rank (if qr component exists)
+  if (!is.null(model$qr)) {
+    if (ncol(stats::model.matrix(model)) != model$qr$rank) {
+      reasons_stop <- c(reasons_stop, "The data does not have full rank, please check geeglm model fitting.")
+    }
+  }
+
+  # Note: geeglm removes $converged attribute (per research: "toDelete includes converged")
+  # Do NOT check convergence for geeglm
+
+  # check for missing data (use .get_data for consistency)
+  model_data <- .get_data(model)
+  if (!is.null(model_data)) {
+    if (nrow(model_data) != nrow(stats::model.frame(model))) {
+      n_missing <- nrow(model_data) - nrow(stats::model.frame(model))
+      if (n_missing == 1) {
+        reasons_warn <- c(reasons_warn, "There is 1 record omitted from the original data due to missing values, please check if they should be imputed prior to model fitting.")
+      } else {
+        reasons_warn <- c(reasons_warn, sprintf("There are %s records omitted from the original data due to missing values, please check if they should be imputed prior to model fitting.", n_missing))
+      }
+    }
+  }
+
+  # print error messages
+  if (!is.null(reasons_stop)) {
+    msg_stop <- sapply(reasons_stop, function(x) c(sprintf("Model of class geeglm %s is not supported.", x), "\n"))
+    stop(msg_stop, call. = FALSE)
+  }
+
+  # print warning messages
+  if (!is.null(reasons_warn)) {
+    for (msg_warn in reasons_warn) warning(msg_warn, call. = FALSE)
+  }
+
+  model$sanitized <- TRUE
+
+  return(model)
+}
+
 #' @export
 sanitize_model.default <- function(model, trt, ...) {
   if (!inherits(model, "glm")) {
