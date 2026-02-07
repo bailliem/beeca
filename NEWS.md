@@ -2,40 +2,28 @@
 
 ## New Features
 
-### User Experience Enhancements
+* `beeca_fit()`: Convenience function combining model fitting and marginal effect estimation in a single call.
+* `plot_forest()`: Forest plots for visualizing treatment effects with customizable confidence levels and styling.
+* `plot.beeca()`: S3 plot method for beeca objects.
+* `beeca_summary_table()`: Generate summary tables from beeca objects returning a data frame with arm statistics and treatment effects.
+* `beeca_to_cards_ard()`: Convert beeca results to Analysis Results Data format via cards.
+* `tidy.beeca()`: Tidy method returning treatment effect estimates as a tibble.
+* `augment.beeca()`: Augment method returning original data with fitted values and predictions.
+* `print.beeca()`: Concise print output showing treatment effect, standard error, Z-value, and p-value.
+* `summary.beeca()`: Comprehensive summary including marginal risks and treatment effects with confidence intervals.
+* `as_gt.beeca()`: Create publication-ready gt tables from beeca objects with customizable titles and footnotes.
+* `trial02_cdisc`: CDISC-compliant example dataset for clinical trial workflows.
 
-- **`beeca_fit()`**: New convenience function that streamlines the analysis workflow by combining model fitting and marginal effect estimation in a single call. Features include:
-  - Automatic treatment variable factorization
-  - Input validation with helpful error messages
-  - Optional progress messages
-  - Support for multiple covariates and stratification
+## Improvements
 
-### Output & Reporting Enhancements
-
-- **Enhanced `print.beeca()`**: Concise output showing treatment effect estimate, standard error, Z-value, and p-value with helpful usage hints
-- **Enhanced `summary.beeca()`**: Comprehensive output including:
-  - Model information (method, sample size, outcome variable)
-  - Marginal risks table with confidence intervals
-  - Treatment effects table with full statistics
-
-### Visualization
-
-- **`plot.beeca()`**: New S3 plot method for beeca objects
-- **`plot_forest()`**: Professional forest plots for visualizing treatment effects with:
-  - Automatic null line positioning based on contrast type
-  - Customizable titles, labels, colors, and confidence levels
-  - Optional numerical value display
-  - Built on ggplot2 for easy customization
-
-## Minor Improvements
-
-- Added `rlang` to package dependencies for safe non-standard evaluation
-- Updated documentation with examples of new features
-- Added comprehensive test suites for all new functions (69 new tests)
+* Updated Magirr et al. reference from OSF preprint to published version in Pharmaceutical Statistics (2025).
+* Added `rlang` and `generics` to package Imports for robust non-standard evaluation and S3 method support.
+* Added Suggests dependencies for enhanced visualization (`ggplot2`) and table formatting (`gt`, `cards`).
+* Enhanced vignettes with improved narrative flow, cross-referencing, and method guidance.
 
 ## Bug Fixes
 
-- Fixed function name conflict in `plot_forest()` where base R's `diff()` was being called incorrectly
+* Fixed function name conflict in `plot_forest()` where base R's `diff()` was called incorrectly.
 
 # beeca 0.2.0
 
