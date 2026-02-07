@@ -111,10 +111,10 @@ Where possible we have cross checked the {beeca} package with alternative implem
 
 ## Package authors
 
--   [Alex Przybylski](mailto:alexander.przybylski@novartis.com?subject=beeca){.email}
--   [Craig Wang](mailto:craig.wang@novartis.com?subject=beeca){.email}
--   [Dominic Magirr](mailto:dominic.magirr@novartis.com?subject=beeca){.email}
--   [Mark Baillie](mailto:mark.baillie@novartis.com?subject=beeca){.email}
+-   [Alex Przybylski](mailto:alexander.przybylski@novartis.com?subject=beeca)
+-   [Craig Wang](mailto:craig.wang@novartis.com?subject=beeca)
+-   [Dominic Magirr](mailto:dominic.magirr@novartis.com?subject=beeca)
+-   [Mark Baillie](mailto:mark.baillie@novartis.com?subject=beeca)
 
 ## Acknowledgments
 
