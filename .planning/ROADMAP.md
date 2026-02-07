@@ -27,11 +27,11 @@ v0.4.0 extends beeca to accept GEE objects (glmgee from glmtoolbox, geeglm from 
   3. estimate_varcov with a GEE object uses GEE's own vcov (not sandwich::vcovHC) and supports robust, bias-corrected (Mancl-DeRouen), and DF-adjusted variance types for glmgee
   4. Calling get_marginal_effect with method="Ye" on a GEE object produces an informative error explaining that Ye's method assumes independence and is not valid for GEE
   5. Invalid GEE objects (wrong family, non-factor treatment, interactions present) produce clear, informative error messages matching the existing GLM validation style
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md -- S3 validation methods for glmgee and geeglm (sanitize_model + DESCRIPTION)
+- [ ] 05-02-PLAN.md -- GEE variance routing and end-to-end pipeline verification
 
 ### Phase 6: GEE Testing
 **Goal**: GEE functionality is validated by a comprehensive test suite, existing GLM functionality has no regressions, and the package passes R CMD check
@@ -65,6 +65,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 5. GEE Core Implementation | 0/TBD | Not started | - |
+| 5. GEE Core Implementation | 0/2 | Not started | - |
 | 6. GEE Testing | 0/TBD | Not started | - |
 | 7. GEE Documentation | 0/TBD | Not started | - |
