@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-31)
 ## Current Position
 
 Phase: 3 of 4 (Vignette Review)
-Plan: 1 of 3 complete
+Plan: 2 of 3 complete
 Status: In progress
-Last activity: 2026-02-07 — Completed 03-01-PLAN.md (Estimand vignette polish)
+Last activity: 2026-02-07 — Completed 03-02-PLAN.md (Vignette cross-linking and polish)
 
-Progress: [████████░░] 80%
+Progress: [████████░░] 82%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 11 min
-- Total execution time: 92 min
+- Total execution time: 96 min
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [████████░░] 80%
 | 01-build-validation | 2/2 | 7 min | 3.5 min |
 | 01.1-gee-longitudinal-feasibility | 2/2 | 71 min | 35.5 min |
 | 02-documentation-review | 3/3 | 11 min | 3.7 min |
-| 03-vignette-review | 1/3 | 3 min | 3.0 min |
+| 03-vignette-review | 2/3 | 7 min | 3.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (2min), 02-01 (8min), 02-03 (1min), 03-01 (3min)
+- Last 5 plans: 02-01 (8min), 02-03 (1min), 03-01 (3min), 03-02 (4min)
 - Trend: Documentation updates consistently fast (1-8min), vignette polish following pattern
 
 *Updated after each plan completion*
@@ -105,6 +105,14 @@ Recent decisions affecting current work:
 - Added cross-vignette navigation links (clinical-trial-table, ard-cards-integration)
 - Kept trial01 for comparisons with explicit explanatory note (SAS validation datasets only exist for trial01)
 
+**From 03-02 (Vignette Cross-Linking and Polish):**
+- ARD vignette uses trial02_cdisc instead of trial01 (CDISC compliance for applied examples)
+- ARD vignette opens with CSR Table 14.2.1 motivation scenario (concrete use case)
+- Removed Future Enhancements section from ARD vignette (release docs show what IS, not what MIGHT be)
+- Clinical trial table vignette has comprehensive summary section with workflow recap
+- All vignettes have cross-references forming navigable documentation chain
+- Complete DOI citations in all references, added Magirr et al. 2025 Pharmaceutical Statistics reference
+
 ### Roadmap Evolution
 
 - Phase 1.1 inserted after Phase 1: GEE Longitudinal Extension Feasibility (URGENT) — user feature request for extending beeca to support GEE/longitudinal binary endpoints with Mancl-DeRouen variance, Firth-penalised GEE, and MVT multiplicity adjustment. Detailed analysis saved in 01.1-ANALYSIS.md.
@@ -148,13 +156,20 @@ None yet.
   - Updated references (Magirr 2025, no version numbers)
   - Cross-vignette navigation links
   - Comparison section with subheadings
-- Next: Plan 02 (Clinical trial table vignette polish)
+- ✓ Plan 02 complete: Vignette cross-linking and polish
+  - ARD vignette: motivation scenario, trial02_cdisc, removed Future Enhancements
+  - Clinical trial table vignette: summary section, cross-references, complete DOI citations
+  - All vignettes build without errors
+  - Navigable documentation chain established
+- Next: Plan 03 (TBD - check .planning/phases/03-vignette-review/ for next plan)
 
 **No blocking issues.**
 
+**Note:** Pre-existing test failure in test-beeca-fit.R:174 (beeca_fit error handling) - unrelated to vignette changes, all vignette checks pass.
+
 ## Session Continuity
 
-Last session: 2026-02-07T07:31:38Z
-Stopped at: Completed 03-01-PLAN.md (Estimand vignette polish)
+Last session: 2026-02-07T07:39:53Z
+Stopped at: Completed 03-02-PLAN.md (Vignette cross-linking and polish)
 Resume file: None
-Next step: Plan 03-02 (Clinical trial table vignette polish)
+Next step: Check .planning/phases/03-vignette-review/ for Plan 03 or Phase 4
