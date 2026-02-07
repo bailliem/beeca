@@ -14,9 +14,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Overview
+## Motivation
 
-The **beeca** package produces Analysis Results Data (ARD) in a CDISC-inspired format through the `marginal_results` component. This vignette explores the relationship between beeca's ARD structure and the more general ARD framework provided by the [insightsengineering/cards](https://github.com/insightsengineering/cards) and [insightsengineering/cardx](https://github.com/insightsengineering/cardx) packages.
+You've completed your covariate-adjusted analysis using `get_marginal_effect()` and obtained marginal treatment effects. Now you need to create Table 14.2.1 for your Clinical Study Report. This table requires:
+
+- **Baseline characteristics** from `cards::ard_continuous()` and `cards::ard_categorical()`
+- **Treatment effects** from beeca's robust variance estimation
+- **Combined into a single ARD** for your reporting pipeline (gtsummary, tfrmt, etc.)
+
+This vignette shows how beeca's ARD format integrates seamlessly with the cards/cardx ecosystem for comprehensive clinical trial reporting. For methodology background and choosing between variance estimation methods, see `vignette('estimand_and_implementations')`.
 
 ## ARD Frameworks Comparison
 
@@ -27,9 +33,10 @@ The beeca package creates ARDs following pharmaceutical industry conventions for
 ```{r setup}
 library(beeca)
 
-trial01$trtp <- factor(trial01$trtp)
-fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+dat <- trial02_cdisc |>
+  dplyr::mutate(TRTP = factor(TRTP))
+fit1 <- glm(AVAL ~ TRTP + SEX + RACE + AGE, family = binomial, data = dat) |>
+  get_marginal_effect(trt = "TRTP", method = "Ye", contrast = "diff", reference = "Placebo")
 
 fit1$marginal_results
 ```
@@ -124,7 +131,7 @@ print(cards_ard)
 # Bind with other cards ARDs
 combined_ard <- cards::bind_ard(
   cards_ard,
-  cards::ard_continuous(trial01, by = trtp, variables = bl_cov)
+  cards::ard_continuous(dat, by = TRTP, variables = AGE)
 )
 
 print(combined_ard)
@@ -142,9 +149,9 @@ te_ard <- beeca_to_cards_ard(fit1$marginal_results)
 
 # Baseline characteristics from cards
 baseline_ard <- cards::ard_continuous(
-  data = trial01,
-  by = trtp,
-  variables = c(bl_cov)
+  data = dat,
+  by = TRTP,
+  variables = AGE
 )
 
 # Combine into comprehensive ARD
@@ -157,10 +164,11 @@ Use cards error-handling features with beeca results:
 
 ```{r qc-workflow, eval=TRUE}
 # Multiple analyses with error capture
+contrasts <- c("diff", "rr", "or")
 analyses <- lapply(contrasts, function(contrast_type) {
   cards::eval_capture_conditions({
-    glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-      get_marginal_effect(trt = "trtp", contrast = contrast_type) |>
+    glm(AVAL ~ TRTP + SEX + RACE + AGE, family = binomial, data = dat) |>
+      get_marginal_effect(trt = "TRTP", contrast = contrast_type, reference = "Placebo") |>
       (\(x) x$marginal_results)()
   })
 })
@@ -175,11 +183,11 @@ Standardize results across multiple studies:
 
 ```{r create-study-fits, eval=TRUE}
 # Create fit objects for two studies (using same data for illustration)
-fit_study1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+fit_study1 <- glm(AVAL ~ TRTP + SEX + RACE + AGE, family = binomial, data = dat) |>
+  get_marginal_effect(trt = "TRTP", method = "Ye", contrast = "diff", reference = "Placebo")
 
-fit_study2 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
-  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
+fit_study2 <- glm(AVAL ~ TRTP + SEX + RACE + AGE, family = binomial, data = dat) |>
+  get_marginal_effect(trt = "TRTP", method = "Ye", contrast = "diff", reference = "Placebo")
 ```
 
 ```{r meta-analysis, eval=TRUE}
@@ -233,15 +241,10 @@ estimates <- meta_ard |>
 - **Context:** Single extensible context column
 - **Focus:** Any statistical analysis
 
-## Future Enhancements
+## Next Steps
 
-The beeca package now includes `beeca_to_cards_ard()` as an exported function for cards integration. Potential future additions include:
-
-1. **S3 Method:** `as_card.beeca()` for seamless conversion (currently using standalone function)
-2. **Native cards Output:** Optional `output = "cards"` parameter in `get_marginal_effect()`
-3. **Error Capture:** Wrap internal calculations with `eval_capture_conditions()`
-4. **Formatting Functions:** Attach default formatting to each statistic type
-5. **Stat Labels:** Add human-readable labels to ARD by default
+- For estimand concepts and method selection, see `vignette('estimand_and_implementations')`
+- For creating regulatory-ready tables, see `vignette('clinical-trial-table')`
 
 ## References
 
