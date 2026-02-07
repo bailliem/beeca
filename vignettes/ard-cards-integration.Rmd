@@ -1,8 +1,8 @@
 ---
-title: "Integration with cards/cardx ARD Framework"
+title: "Integration with cards ARD Framework"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Integration with cards/cardx ARD Framework}
+  %\VignetteIndexEntry{Integration with cards ARD Framework}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
