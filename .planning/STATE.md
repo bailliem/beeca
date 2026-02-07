@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-31)
 
 **Core value:** All R CMD checks pass with no errors or warnings
-**Current focus:** Phase 3 complete — ready for Phase 4
+**Current focus:** Phase 4 in progress — NEWS.md updated, ready for final checks
 
 ## Current Position
 
-Phase: 3 of 4 (Vignette Review)
-Plan: 2 of 2 complete
-Status: Phase complete
-Last activity: 2026-02-07 — Phase 3 verified (12/12 must-haves passed)
+Phase: 4 of 4 (Release Preparation)
+Plan: 1 of 2 complete
+Status: In progress
+Last activity: 2026-02-07 — Completed 04-01-PLAN.md
 
-Progress: [█████████░] 90%
+Progress: [█████████░] 95%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 11 min
-- Total execution time: 96 min
+- Total plans completed: 10
+- Average duration: 10 min
+- Total execution time: 98 min
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: [█████████░] 90%
 | 01.1-gee-longitudinal-feasibility | 2/2 | 71 min | 35.5 min |
 | 02-documentation-review | 3/3 | 11 min | 3.7 min |
 | 03-vignette-review | 2/2 | 7 min | 3.5 min |
+| 04-release-preparation | 1/2 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (8min), 02-03 (1min), 03-01 (3min), 03-02 (4min)
-- Trend: Documentation and vignette updates consistently fast (1-8min)
+- Last 5 plans: 02-03 (1min), 03-01 (3min), 03-02 (4min), 04-01 (2min)
+- Trend: Documentation tasks consistently fast (1-4min)
 
 *Updated after each plan completion*
 
@@ -113,6 +114,13 @@ Recent decisions affecting current work:
 - All vignettes have cross-references forming navigable documentation chain
 - Complete DOI citations in all references, added Magirr et al. 2025 Pharmaceutical Statistics reference
 
+**From 04-01 (NEWS.md Restructure and Reference Updates):**
+- Restructured NEWS.md to standard R package style (New Features, Improvements, Bug Fixes sections)
+- One-liner bullets for all functions with backtick formatting (tidyverse convention)
+- trial02_cdisc dataset documented as explicit bullet item
+- Updated all OSF preprint references (R/estimate_varcov.R, R/get_marginal_effect.R) to published DOI 10.1002/pst.70021
+- Used roxygen2 \doi{} tag for clickable DOI links in help pages
+
 ### Roadmap Evolution
 
 - Phase 1.1 inserted after Phase 1: GEE Longitudinal Extension Feasibility (URGENT) — user feature request for extending beeca to support GEE/longitudinal binary endpoints with Mancl-DeRouen variance, Firth-penalised GEE, and MVT multiplicity adjustment. Detailed analysis saved in 01.1-ANALYSIS.md.
@@ -156,6 +164,6 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-07
-Stopped at: Phase 3 complete — verification passed
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
-Next step: Phase 4 (Release Preparation) — plan and execute
+Next step: Execute 04-02-PLAN.md (final R CMD check and release verification)
