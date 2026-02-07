@@ -30,7 +30,9 @@
 <url><loc>https://openpharma.github.io/beeca/reference/predict_counterfactuals.html</loc></url>
 <url><loc>https://openpharma.github.io/beeca/reference/print.beeca.html</loc></url>
 <url><loc>https://openpharma.github.io/beeca/reference/reexports.html</loc></url>
+<url><loc>https://openpharma.github.io/beeca/reference/sanitize_model.geeglm.html</loc></url>
 <url><loc>https://openpharma.github.io/beeca/reference/sanitize_model.glm.html</loc></url>
+<url><loc>https://openpharma.github.io/beeca/reference/sanitize_model.glmgee.html</loc></url>
 <url><loc>https://openpharma.github.io/beeca/reference/sanitize_model.html</loc></url>
 <url><loc>https://openpharma.github.io/beeca/reference/sanitize_variable.html</loc></url>
 <url><loc>https://openpharma.github.io/beeca/reference/summary.beeca.html</loc></url>

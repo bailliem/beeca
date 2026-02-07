@@ -172,24 +172,24 @@ perfectly predicts the outcome. In GEE:
 
 ### 3.1 Input validation (`sanitize.R`)
 
-| Current                               | Required change                                                                     |
-|---------------------------------------|-------------------------------------------------------------------------------------|
-| Only accepts `glm` class              | Add `sanitize_model.glmgee()` and/or `sanitize_model.geeglm()` S3 methods           |
-| Checks `$family$family == "binomial"` | GEE objects store family differently; `glmgee` uses `$family` but structure differs |
-| Checks `$converged`                   | GEE convergence flag location differs                                               |
-| Checks `$qr$rank`                     | GEE objects may not have QR decomposition                                           |
-| Checks response is 0/1                | Would need to also handle ordinal responses if extending to ordinal GEE             |
-| No cluster ID concept                 | Need to validate and track cluster/subject identifier                               |
-| No timepoint concept                  | Need to validate and track visit/timepoint variable                                 |
+| Current                               | Required change                                                                                                                                                                                                             |
+|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Only accepts `glm` class              | Add [`sanitize_model.glmgee()`](https://openpharma.github.io/beeca/reference/sanitize_model.glmgee.md) and/or [`sanitize_model.geeglm()`](https://openpharma.github.io/beeca/reference/sanitize_model.geeglm.md) S3 methods |
+| Checks `$family$family == "binomial"` | GEE objects store family differently; `glmgee` uses `$family` but structure differs                                                                                                                                         |
+| Checks `$converged`                   | GEE convergence flag location differs                                                                                                                                                                                       |
+| Checks `$qr$rank`                     | GEE objects may not have QR decomposition                                                                                                                                                                                   |
+| Checks response is 0/1                | Would need to also handle ordinal responses if extending to ordinal GEE                                                                                                                                                     |
+| No cluster ID concept                 | Need to validate and track cluster/subject identifier                                                                                                                                                                       |
+| No timepoint concept                  | Need to validate and track visit/timepoint variable                                                                                                                                                                         |
 
 ### 3.2 Counterfactual predictions (`predict_counterfactuals.R`)
 
-| Current                                                 | Required change                                                                   |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------|
-| Uses `stats::predict(object, newdata, type="response")` | GEE predict methods differ; `glmtoolbox::predict.glmgee()` exists but API differs |
-| Creates N × K tibble                                    | Need N×T × K structure, or predict at each timepoint separately                   |
-| Single response per subject                             | Need to handle multiple responses per subject                                     |
-| No time dimension                                       | Counterfactuals need to be timepoint-specific                                     |
+| Current                                                 | Required change                                                                                                                             |
+|---------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| Uses `stats::predict(object, newdata, type="response")` | GEE predict methods differ; [`glmtoolbox::predict.glmgee()`](https://rdrr.io/pkg/glmtoolbox/man/predict.glmgee.html) exists but API differs |
+| Creates N × K tibble                                    | Need N×T × K structure, or predict at each timepoint separately                                                                             |
+| Single response per subject                             | Need to handle multiple responses per subject                                                                                               |
+| No time dimension                                       | Counterfactuals need to be timepoint-specific                                                                                               |
 
 ### 3.3 Averaging (`average_predictions.R`)
 
@@ -343,10 +343,12 @@ for the parameter variance matrix. This function is designed for
 ### 5.2 The `.get_data()` assumption
 
 Currently `.get_data()` returns `model$model` (the model frame from
-`glm`). GEE objects may store data differently: - `glmtoolbox::glmgee`
-stores data in `$model` (similar to glm) - `geepack::geeglm` stores data
-in `$data` or `$model` - Need to verify data retrieval works correctly
-with repeated-measures data structure
+`glm`). GEE objects may store data differently: -
+[`glmtoolbox::glmgee`](https://rdrr.io/pkg/glmtoolbox/man/glmgee.html)
+stores data in `$model` (similar to glm) -
+[`geepack::geeglm`](https://rdrr.io/pkg/geepack/man/geeglm.html) stores
+data in `$data` or `$model` - Need to verify data retrieval works
+correctly with repeated-measures data structure
 
 ### 5.3 The `predict()` step
 
@@ -379,7 +381,9 @@ timepoint-specific effects).
 
 ### Phase 1: Accept GEE objects for cross-sectional analysis
 
-- Add `sanitize_model.glmgee()` S3 method
+- Add
+  [`sanitize_model.glmgee()`](https://openpharma.github.io/beeca/reference/sanitize_model.glmgee.md)
+  S3 method
 - Allow GEE-fitted models to flow through the existing pipeline
 - Use GEE’s own vcov (including M-dR) instead of
   [`sandwich::vcovHC()`](https://sandwich.R-Forge.R-project.org/reference/vcovHC.html)

@@ -169,7 +169,7 @@
 <table class="table"><colgroup><col width="50%"><col width="50%"></colgroup><thead><tr class="header"><th>Current</th>
 <th>Required change</th>
 </tr></thead><tbody><tr class="odd"><td>Only accepts <code>glm</code> class</td>
-<td>Add <code>sanitize_model.glmgee()</code> and/or <code>sanitize_model.geeglm()</code> S3 methods</td>
+<td>Add <code><a href="reference/sanitize_model.glmgee.html">sanitize_model.glmgee()</a></code> and/or <code><a href="reference/sanitize_model.geeglm.html">sanitize_model.geeglm()</a></code> S3 methods</td>
 </tr><tr class="even"><td>Checks <code>$family$family == "binomial"</code>
 </td>
 <td>GEE objects store family differently; <code>glmgee</code> uses <code>$family</code> but structure differs</td>
@@ -192,7 +192,7 @@
 <th>Required change</th>
 </tr></thead><tbody><tr class="odd"><td>Uses <code>stats::predict(object, newdata, type="response")</code>
 </td>
-<td>GEE predict methods differ; <code>glmtoolbox::predict.glmgee()</code> exists but API differs</td>
+<td>GEE predict methods differ; <code><a href="https://rdrr.io/pkg/glmtoolbox/man/predict.glmgee.html" class="external-link">glmtoolbox::predict.glmgee()</a></code> exists but API differs</td>
 </tr><tr class="even"><td>Creates N × K tibble</td>
 <td>Need N×T × K structure, or predict at each timepoint separately</td>
 </tr><tr class="odd"><td>Single response per subject</td>
@@ -324,7 +324,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="id_52-the-get_data-assumption">5.2 The <code>.get_data()</code> assumption<a class="anchor" aria-label="anchor" href="#id_52-the-get_data-assumption"></a></h3>
-<p>Currently <code>.get_data()</code> returns <code>model$model</code> (the model frame from <code>glm</code>). GEE objects may store data differently: - <code>glmtoolbox::glmgee</code> stores data in <code>$model</code> (similar to glm) - <code>geepack::geeglm</code> stores data in <code>$data</code> or <code>$model</code> - Need to verify data retrieval works correctly with repeated-measures data structure</p>
+<p>Currently <code>.get_data()</code> returns <code>model$model</code> (the model frame from <code>glm</code>). GEE objects may store data differently: - <code><a href="https://rdrr.io/pkg/glmtoolbox/man/glmgee.html" class="external-link">glmtoolbox::glmgee</a></code> stores data in <code>$model</code> (similar to glm) - <code><a href="https://rdrr.io/pkg/geepack/man/geeglm.html" class="external-link">geepack::geeglm</a></code> stores data in <code>$data</code> or <code>$model</code> - Need to verify data retrieval works correctly with repeated-measures data structure</p>
 </div>
 <div class="section level3">
 <h3 id="id_53-the-predict-step">5.3 The <code>predict()</code> step<a class="anchor" aria-label="anchor" href="#id_53-the-predict-step"></a></h3>
@@ -345,7 +345,7 @@
 </ul></div>
 <div class="section level3">
 <h3 id="phase-1-accept-gee-objects-for-cross-sectional-analysis">Phase 1: Accept GEE objects for cross-sectional analysis<a class="anchor" aria-label="anchor" href="#phase-1-accept-gee-objects-for-cross-sectional-analysis"></a></h3>
-<ul><li>Add <code>sanitize_model.glmgee()</code> S3 method</li>
+<ul><li>Add <code><a href="reference/sanitize_model.glmgee.html">sanitize_model.glmgee()</a></code> S3 method</li>
 <li>Allow GEE-fitted models to flow through the existing pipeline</li>
 <li>Use GEE’s own vcov (including M-dR) instead of <code><a href="https://sandwich.R-Forge.R-project.org/reference/vcovHC.html" class="external-link">sandwich::vcovHC()</a></code>
 </li>
