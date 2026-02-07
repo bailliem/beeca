@@ -9,5 +9,5 @@
 
 - [Creating Clinical Trial Tables with
   beeca](https://openpharma.github.io/beeca/articles/clinical-trial-table.md):
-- [Integration with cards/cardx ARD
+- [Integration with cards ARD
   Framework](https://openpharma.github.io/beeca/articles/ard-cards-integration.md):

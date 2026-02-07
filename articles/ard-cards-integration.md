@@ -1,4 +1,4 @@
-# Integration with cards/cardx ARD Framework
+# Integration with cards ARD Framework
 
 ## Motivation
 
