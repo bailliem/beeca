@@ -36,7 +36,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests:
     cards,
+    geepack (>= 1.3.13),
     ggplot2,
+    glmtoolbox (>= 0.1.12),
     gt,
     knitr,
     marginaleffects,
