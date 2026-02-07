@@ -20,3 +20,5 @@ manifest.json
 ^\.planning$
 ^doc$
 ^Meta$
+^README\.Rmd$
+^README\.html$
