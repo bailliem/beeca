@@ -22,9 +22,9 @@ Requirements for v0.3.0 GitHub release.
 
 ### Vignettes
 
-- [ ] **VIG-01**: ARD vignette is clear, informative, and tells a good story
-- [ ] **VIG-02**: Clinical trial reporting vignette demonstrates complete workflow
-- [ ] **VIG-03**: All vignettes render without errors
+- [x] **VIG-01**: ARD vignette is clear, informative, and tells a good story
+- [x] **VIG-02**: Clinical trial reporting vignette demonstrates complete workflow
+- [x] **VIG-03**: All vignettes render without errors
 
 ### Release Prep
 
@@ -56,9 +56,9 @@ Requirements for v0.3.0 GitHub release.
 | DOCS-01 | Phase 2 | Complete |
 | DOCS-02 | Phase 2 | Complete |
 | DOCS-03 | Phase 2 | Complete |
-| VIG-01 | Phase 3 | Pending |
-| VIG-02 | Phase 3 | Pending |
-| VIG-03 | Phase 3 | Pending |
+| VIG-01 | Phase 3 | Complete |
+| VIG-02 | Phase 3 | Complete |
+| VIG-03 | Phase 3 | Complete |
 | REL-01 | Phase 4 | Pending |
 | REL-02 | Phase 4 | Pending |
 | REL-03 | Phase 4 | Pending |
@@ -70,4 +70,4 @@ Requirements for v0.3.0 GitHub release.
 
 ---
 *Requirements defined: 2026-01-31*
-*Last updated: 2026-02-06 after Phase 2 completion*
+*Last updated: 2026-02-07 after Phase 3 completion*

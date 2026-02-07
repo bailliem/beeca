@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Build Validation** - Ensure R CMD check passes and all tests run cleanly
 - [x] **Phase 1.1: GEE Longitudinal Extension Feasibility** (INSERTED) - Feasibility spike for extending beeca to support GEE/longitudinal binary endpoints
 - [x] **Phase 2: Documentation Review** - Verify all documentation is accurate and complete
-- [ ] **Phase 3: Vignette Review** - Review and polish vignettes for clarity and storytelling
+- [x] **Phase 3: Vignette Review** - Review and polish vignettes for clarity and storytelling
 - [ ] **Phase 4: Release Preparation** - Update release artifacts and finalize v0.3.0
 
 ## Phase Details
@@ -76,8 +76,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Polish estimand vignette: add hook, method guidance, update references
-- [ ] 03-02-PLAN.md — Polish ARD and clinical-trial-table vignettes, verify all vignettes render
+- [x] 03-01-PLAN.md — Polish estimand vignette: add hook, method guidance, update references
+- [x] 03-02-PLAN.md — Polish ARD and clinical-trial-table vignettes, verify all vignettes render
 
 ### Phase 4: Release Preparation
 **Goal**: Package is ready for v0.3.0 GitHub release
@@ -103,8 +103,8 @@ Phases execute in numeric order: 1 -> 1.1 -> 2 -> 3 -> 4
 | 1. Build Validation | 2/2 | Complete | 2026-01-31 |
 | 1.1 GEE Longitudinal Feasibility (INSERTED) | 2/2 | Complete | 2026-02-03 |
 | 2. Documentation Review | 3/3 | Complete | 2026-02-06 |
-| 3. Vignette Review | 0/2 | Planned | - |
+| 3. Vignette Review | 2/2 | Complete | 2026-02-07 |
 | 4. Release Preparation | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-07 after Phase 3 planning*
+*Last updated: 2026-02-07 after Phase 3 execution complete*
