@@ -20,7 +20,7 @@
 #' et al (2011) which is suitable for the variance estimation of conditional
 #' average treatment effect. The method `Ye` is based on Ye et al (2023) and is
 #' suitable for the variance estimation of population average treatment effect.
-#' For more details, see [Magirr et al. (2024)](https://osf.io/9mp58/).
+#' For more details, see Magirr et al. (2025) \doi{10.1002/pst.70021}.
 #'
 #'
 #' @param type a string indicating the type of

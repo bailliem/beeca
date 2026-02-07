@@ -32,7 +32,7 @@ Supported methods are \code{Ge} and \code{Ye}. The default method is \code{Ge} b
 et al (2011) which is suitable for the variance estimation of conditional
 average treatment effect. The method \code{Ye} is based on Ye et al (2023) and is
 suitable for the variance estimation of population average treatment effect.
-For more details, see \href{https://osf.io/9mp58/}{Magirr et al. (2024)}.}
+For more details, see Magirr et al. (2025) \doi{10.1002/pst.70021}.}
 
 \item{type}{a string indicating the type of
 variance estimator to use (only applicable for Ge's method). Supported types include HC0 (default),
