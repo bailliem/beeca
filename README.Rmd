@@ -1,16 +1,29 @@
-# Binary Endpoint Estimation with Covariate Adjustment
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# Binary Endpoint Estimation with Covariate Adjustment
+
 <!-- badges: start -->
 
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable) 
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 ![CRAN status](https://www.r-pkg.org/badges/version/beeca)
 [![R-CMD-check](https://github.com/openpharma/beeca/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/openpharma/beeca/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/openpharma/beeca/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/openpharma/beeca/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
-The goal of **beeca** is to provide an implementation solution with a simple user interface to estimate marginal estimands in a binary endpoint setting with covariate adjustment. The primary aim of this lightweight implementation is to facilitate quick industry adoption and use within GxP environments. A secondary aim is to support the simulation studies included in [Magirr et al. (2025)](https://doi.org/10.1002/pst.70021). 
+The goal of **beeca** is to provide an implementation solution with a simple user interface to estimate marginal estimands in a binary endpoint setting with covariate adjustment. The primary aim of this lightweight implementation is to facilitate quick industry adoption and use within GxP environments. A secondary aim is to support the simulation studies included in [Magirr et al. (2025)](https://doi.org/10.1002/pst.70021).
 
 
 ## Installation
@@ -34,7 +47,7 @@ The package is designed to estimate marginal (unconditional) estimands in a bina
 
 The `beeca_fit()` function provides a streamlined workflow for covariate-adjusted analysis:
 
-``` r
+```{r quick-start}
 library(beeca)
 
 ## Quick analysis with beeca_fit()
@@ -52,7 +65,9 @@ print(fit)
 
 ## View detailed results
 summary(fit)
+```
 
+```{r quick-start-plot, fig.alt = "Forest plot of treatment effect from beeca_fit"}
 ## Create forest plot
 plot(fit)
 ```
@@ -61,15 +76,15 @@ plot(fit)
 
 For more control over the analysis, use the manual workflow:
 
-``` r
+```{r manual-workflow}
 library(beeca)
 
 ## Set treatment to a factor
 trial01$trtp <- factor(trial01$trtp)
 
 ## Fit a logistic regression working model and pass it to beeca
-fit1 <- glm(aval ~ trtp + bl_cov, family="binomial", data=trial01) |>
-  get_marginal_effect(trt="trtp", method="Ye", contrast="diff")
+fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
+  get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff")
 
 ## View the results in Analysis Results Data (ARD) structure
 fit1$marginal_results
@@ -79,18 +94,20 @@ tidy(fit1, conf.int = TRUE)
 
 ## Include marginal risk estimates for each treatment arm
 tidy(fit1, include_marginal = TRUE, conf.int = TRUE)
+```
 
+```{r manual-workflow-plot, fig.alt = "Forest plot of treatment effect from manual workflow"}
 ## Create a forest plot with customization
 plot(fit1, conf.level = 0.90, title = "Treatment Effect Analysis")
 ```
 
-## Package documentation 
+## Package documentation
 
 The package documentation can be found [here](https://openpharma.github.io/beeca/). For a brief overview of the different estimands and their estimation, please see vignette [`vignette("estimand_and_implementations")`](https://openpharma.github.io/beeca/articles/estimand_and_implementations.html).
 
 ## Quality checks
 
-Where possible we have cross checked the {beeca} package with alternative implementations in `SAS` and `R`. For example, the Ge et al. method which applies the delta method has been cross checked against the `SAS` [%margins](https://support.sas.com/kb/63/038.html) macro and the R packages [{margins}](https://cran.r-project.org/package=margins) and [{marginaleffects}](https://cran.r-project.org/package=marginaleffects). The Ye et al. method has been cross checked against [{RobinCar}](https://cran.r-project.org/package=RobinCar/). 
+Where possible we have cross checked the {beeca} package with alternative implementations in `SAS` and `R`. For example, the Ge et al. method which applies the delta method has been cross checked against the `SAS` [%margins](https://support.sas.com/kb/63/038.html) macro and the R packages [{margins}](https://cran.r-project.org/package=margins) and [{marginaleffects}](https://cran.r-project.org/package=marginaleffects). The Ye et al. method has been cross checked against [{RobinCar}](https://cran.r-project.org/package=RobinCar/).
 
 ## Package authors
 
@@ -102,7 +119,7 @@ Where possible we have cross checked the {beeca} package with alternative implem
 ## Acknowledgments
 
 Our lightweight implementation was inspired and aided by the more comprehensive [{RobinCar}](https://cran.r-project.org/package=RobinCar/) package, developed by
-Marlena Bannick, Ting Ye et al. We thank the [ASA-BIOP Covariate Adjustment Scientific Working Group](https://carswg.github.io/) for valuable feedback and discussions. 
+Marlena Bannick, Ting Ye et al. We thank the [ASA-BIOP Covariate Adjustment Scientific Working Group](https://carswg.github.io/) for valuable feedback and discussions.
 
 Further development of covariate adjustment software is by the [Software Subteam](https://carswg.github.io/subteam_software.html) of ASA-BIOP Covariate Adjustment Scientific Working Group.
 
