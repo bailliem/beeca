@@ -9,15 +9,26 @@ vignette: >
 
 ## Introduction
 
+The FDA recommends covariate-adjusted analyses for randomized clinical trials, but which variance estimator should you use? The `beeca` package makes this simple:
+
+```r
+library(beeca)
+fit <- glm(AVAL ~ TRTP + SEX + RACE + AGE, family = "binomial", data = trial02_cdisc)
+get_marginal_effect(fit, trt = "TRTP", method = "Ye", contrast = "diff", reference = "Placebo")
+```
+
+To understand why this works and when to use each method, we need to clarify what type of treatment effect we're estimating.
+
 The [ICH E9(R1) addendum](https://www.ema.europa.eu/en/documents/scientific-guideline/ich-e9-r1-addendum-estimands-and-sensitivity-analysis-clinical-trials-guideline-statistical-principles-clinical-trials-step-5_en.pdf) proposed a framework for the formulation of scientific questions and treatment effects in clinical trials. The framework emphasized the importance of formulating precisely the scientific questions of interest in clinical trials in the form of an estimand. An estimand describes the treatment effect of interest via five attributes, which include treatment, population, variable (endpoint), intercurrent event and population-level summary.
 
-Recent [FDA guidance (2023)](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adjusting-covariates-randomized-clinical-trials-drugs-and-biological-products) on *Adjusting for Covariates in Randomized Clinical Trials for Drugs and Biological Products for Industry* discussed various considerations when prospectively specifying covariate-adjusted analysis, including the distinction between *unconditional* vs. *conditional* average treatment effects. 
+Recent [FDA guidance (2023)](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adjusting-covariates-randomized-clinical-trials-drugs-and-biological-products) on *Adjusting for Covariates in Randomized Clinical Trials for Drugs and Biological Products for Industry* discussed various considerations when prospectively specifying covariate-adjusted analysis, including the distinction between *unconditional* vs. *conditional* average treatment effects.
 
-This vignette provides 
+This vignette provides
 
-1. A brief explanation of the different concepts on average treatment effect covered in the package. 
-2. An analysis example using the package to estimate an average treatment effect in a clinical trial with covariate adjustment.
-3. A comparison with other implementations of the methods.
+1. A brief explanation of the different concepts on average treatment effect covered in the package.
+2. Practical guidance on selecting the appropriate variance estimation method.
+3. An analysis example using the package to estimate an average treatment effect in a clinical trial with covariate adjustment.
+4. A comparison with other implementations of the methods.
 
 ## General concepts
 
@@ -50,9 +61,26 @@ Regardless of whether the estimand is  $\mathrm{PATE}^S$, $\mathrm{CPATE}^S$ or 
 
 To avoid ambiguity regarding how the variance of the g-computation estimator should be calculated, it is necessary to be precise about whether one is estimating the $\mathrm{PATE}^S$, $\mathrm{CPATE}^S$ or $\mathrm{SATE}$.
 
-{beeca} implements variance estimation for $\mathrm{PATE}^S$ based on the methods of [Ye et al. (2023)](https://doi.org/10.1080/24754269.2023.2205802), and $\mathrm{CPATE}^S$ based on [Ge et al. (2011)](https://doi.org/10.1177/009286151104500409). 
+{beeca} implements variance estimation for $\mathrm{PATE}^S$ based on the methods of [Ye et al. (2023)](https://doi.org/10.1080/24754269.2023.2205802), and $\mathrm{CPATE}^S$ based on [Ge et al. (2011)](https://doi.org/10.1177/009286151104500409).
 
 See [Magirr et al. (2024)](https://osf.io/9mp58/) for discussion of the estimands $\mathrm{PATE}^S$ and $\mathrm{CPATE}^S$, and the corresponding methodology for variance estimation.
+
+## Which method should I use?
+
+For most regulatory submissions, use `method = "Ye"`. This method targets the **population average treatment effect (PATE)**, which is an unconditional estimand recommended by the FDA guidance (2023) for primary analyses.
+
+The **Ye et al. (2023)** method provides robust variance estimation for PATE by accounting for both model parameter uncertainty and the variability in the counterfactual predictions across the population. This unconditional approach is appropriate when you want to estimate the treatment effect for the broader population from which your trial sample was drawn.
+
+The **Ge et al. (2011)** method targets the **conditional population average treatment effect (CPATE)**, which conditions on the specific baseline covariate values observed in your trial. This is appropriate when your primary estimand is explicitly conditional on the trial sample's baseline characteristics.
+
+**Key points:**
+
+- Point estimates are identical between methods; only the standard errors differ.
+- If your protocol specifies an unconditional estimand (most common), use `method = "Ye"`.
+- If your protocol specifies a conditional estimand, use `method = "Ge"`.
+- When in doubt, use `method = "Ye"` — it aligns with FDA guidance on unconditional estimands for covariate-adjusted analyses.
+
+For practical reporting examples, see `vignette('clinical-trial-table')`.
 
 ## Analysis example
 
