@@ -73,10 +73,11 @@ Plans:
   1. ARD vignette clearly explains ARD format and tells a good story
   2. Clinical trial reporting vignette demonstrates complete, realistic workflow
   3. All vignettes (estimand_and_implementations, ARD, clinical reporting) render without errors
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: TBD during planning
+- [ ] 03-01-PLAN.md — Polish estimand vignette: add hook, method guidance, update references
+- [ ] 03-02-PLAN.md — Polish ARD and clinical-trial-table vignettes, verify all vignettes render
 
 ### Phase 4: Release Preparation
 **Goal**: Package is ready for v0.3.0 GitHub release
@@ -95,15 +96,15 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 1.1 → 2 → 3 → 4
+Phases execute in numeric order: 1 -> 1.1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Build Validation | 2/2 | ✓ Complete | 2026-01-31 |
-| 1.1 GEE Longitudinal Feasibility (INSERTED) | 2/2 | ✓ Complete | 2026-02-03 |
-| 2. Documentation Review | 3/3 | ✓ Complete | 2026-02-06 |
-| 3. Vignette Review | 0/? | Not started | - |
+| 1. Build Validation | 2/2 | Complete | 2026-01-31 |
+| 1.1 GEE Longitudinal Feasibility (INSERTED) | 2/2 | Complete | 2026-02-03 |
+| 2. Documentation Review | 3/3 | Complete | 2026-02-06 |
+| 3. Vignette Review | 0/2 | Planned | - |
 | 4. Release Preparation | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-06 after Phase 2 execution*
+*Last updated: 2026-02-07 after Phase 3 planning*
