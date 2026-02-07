@@ -32,7 +32,7 @@ library(beeca)
 library(dplyr)
 ```
 
-For the table examples, we use the `{gt}` package:
+For the table examples, we use the `{gt}` package, which produces HTML tables ideal for pkgdown websites and web-based reports. For Word or PowerPoint output, consider the `{flextable}` or `{huxtable}` packages, which can consume the same `beeca_summary_table()` output.
 
 ```{r gt-setup, eval=requireNamespace("gt", quietly = TRUE)}
 library(gt)
@@ -364,6 +364,24 @@ as_gt(
 )
 ```
 
+## Summary
+
+This vignette demonstrated beeca's complete clinical trial table workflow:
+
+- **`get_marginal_effect()`** for covariate-adjusted treatment effect estimation
+- **`as_gt()`** for publication-ready regulatory tables with metadata
+- **`beeca_summary_table()`** for structured data suitable for custom table creation
+- **`beeca_fit()`** for streamlined one-step analysis
+- **`tidy()`** and **`summary()`** for flexible result inspection
+- **`plot()`** for forest plot visualization
+
+All examples used the `trial02_cdisc` dataset with the Ye et al. (2023) method for robust variance estimation targeting the population average treatment effect (PATE).
+
+**Next steps:**
+
+- For estimand concepts and variance method selection, see `vignette('estimand_and_implementations')`
+- For integrating beeca results with the cards ARD framework, see `vignette('ard-cards-integration')`
+
 ## Session Information
 
 ```{r session-info}
@@ -372,8 +390,10 @@ sessionInfo()
 
 ## References
 
-- Ge, M., Durham, L.K., Meyer, R.D., Xie, W., & Thomas, N. (2011). Covariate-Adjusted Difference in Proportions from Clinical Trials Using Logistic Regression and Weighted Risk Differences. *Drug Information Journal*, 45, 481-493.
+- Ge, M., Durham, L.K., Meyer, R.D., Xie, W., & Thomas, N. (2011). Covariate-Adjusted Difference in Proportions from Clinical Trials Using Logistic Regression and Weighted Risk Differences. *Drug Information Journal*, 45, 481-493. https://doi.org/10.1177/009286151104500409
 
-- Ye, T., Bannick, M., Yi, Y., & Shao, J. (2023). Robust Variance Estimation for Covariate-Adjusted Unconditional Treatment Effect in Randomized Clinical Trials with Binary Outcomes. *Statistical Theory and Related Fields*, 7(2), 159-163.
+- Ye, T., Bannick, M., Yi, Y., & Shao, J. (2023). Robust Variance Estimation for Covariate-Adjusted Unconditional Treatment Effect in Randomized Clinical Trials with Binary Outcomes. *Statistical Theory and Related Fields*, 7(2), 159-163. https://doi.org/10.1080/24754269.2023.2205802
 
-- FDA (2023). Adjusting for Covariates in Randomized Clinical Trials for Drugs and Biological Products. Guidance for Industry.
+- Magirr, D., Wang, C., Przybylski, A., & Baillie, M. (2025). Estimating the Variance of Covariate-Adjusted Estimators of Average Treatment Effects in Clinical Trials With Binary Endpoints. *Pharmaceutical Statistics*, 24(4), e70021. https://doi.org/10.1002/pst.70021
+
+- FDA (2023). Adjusting for Covariates in Randomized Clinical Trials for Drugs and Biological Products. Guidance for Industry. https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adjusting-covariates-randomized-clinical-trials-drugs-and-biological-products
