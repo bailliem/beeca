@@ -123,10 +123,11 @@ plot_forest <- function(x,
                         color = null_line_color,
                         linewidth = 0.5) +
     # Confidence intervals
-    ggplot2::geom_errorbarh(ggplot2::aes(xmin = .data$conf.low,
-                                         xmax = .data$conf.high),
-                            height = 0.2,
-                            linewidth = 0.7) +
+    ggplot2::geom_errorbar(ggplot2::aes(xmin = .data$conf.low,
+                                        xmax = .data$conf.high),
+                           width = 0.2,
+                           linewidth = 0.7,
+                           orientation = "y") +
     # Point estimates
     ggplot2::geom_point(size = point_size, color = "black") +
     # Labels

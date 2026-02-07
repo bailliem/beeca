@@ -163,24 +163,25 @@ test_that("beeca_fit warns about missing data", {
   skip("Known issue: subscript out of bounds in test environment")
 })
 
-test_that("beeca_fit handles model fitting errors gracefully", {
-  # Create problematic data (e.g., perfect separation)
-  data_bad <- data.frame(
+test_that("beeca_fit handles perfect separation gracefully", {
+  # Perfect separation: glm converges with warnings (fitted probs 0 or 1)
+  # but does not error — beeca_fit should handle this without crashing
+  data_sep <- data.frame(
     outcome = c(0, 0, 1, 1),
     treatment = factor(c("A", "A", "B", "B")),
     covariate = c(1, 2, 100, 101)
   )
 
-  expect_error(
+  result <- suppressWarnings(
     beeca_fit(
-      data = data_bad,
+      data = data_sep,
       outcome = "outcome",
       treatment = "treatment",
       covariates = "covariate",
       verbose = FALSE
-    ),
-    "failed"
+    )
   )
+  expect_true(inherits(result, "glm"))
 })
 
 test_that("beeca_fit passes additional arguments to get_marginal_effect", {

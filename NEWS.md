@@ -24,6 +24,7 @@
 ## Bug Fixes
 
 * Fixed function name conflict in `plot_forest()` where base R's `diff()` was called incorrectly.
+* Replaced deprecated `geom_errorbarh()` with `geom_errorbar(orientation = "y")` in `plot_forest()` for ggplot2 4.0.0 compatibility.
 
 # beeca 0.2.0
 
