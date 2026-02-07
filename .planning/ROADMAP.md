@@ -11,7 +11,7 @@ v0.4.0 extends beeca to accept GEE objects (glmgee from glmtoolbox, geeglm from 
 
 ## Phases
 
-- [ ] **Phase 5: GEE Core Implementation** - S3 validation methods, variance routing, and end-to-end pipeline for GEE objects
+- [x] **Phase 5: GEE Core Implementation** - S3 validation methods, variance routing, and end-to-end pipeline for GEE objects
 - [ ] **Phase 6: GEE Testing** - Comprehensive test suite, regression validation, R CMD check
 - [ ] **Phase 7: GEE Documentation** - Vignette, man pages, NEWS.md for v0.4.0
 
@@ -31,7 +31,7 @@ v0.4.0 extends beeca to accept GEE objects (glmgee from glmtoolbox, geeglm from 
 
 Plans:
 - [x] 05-01-PLAN.md -- S3 validation methods for glmgee and geeglm (sanitize_model + DESCRIPTION)
-- [ ] 05-02-PLAN.md -- GEE variance routing and end-to-end pipeline verification
+- [x] 05-02-PLAN.md -- GEE variance routing and end-to-end pipeline verification
 
 ### Phase 6: GEE Testing
 **Goal**: GEE functionality is validated by a comprehensive test suite, existing GLM functionality has no regressions, and the package passes R CMD check
@@ -65,6 +65,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 5. GEE Core Implementation | 1/2 | In progress | - |
+| 5. GEE Core Implementation | 2/2 | Complete | 2026-02-07 |
 | 6. GEE Testing | 0/TBD | Not started | - |
 | 7. GEE Documentation | 0/TBD | Not started | - |
