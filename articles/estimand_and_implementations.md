@@ -1,0 +1,494 @@
+# Introduction to estimating a marginal estimand with beeca
+
+## Introduction
+
+The FDA recommends covariate-adjusted analyses for randomized clinical
+trials, but which variance estimator should you use? The `beeca` package
+makes this simple:
+
+``` r
+library(beeca)
+fit <- glm(AVAL ~ TRTP + SEX + RACE + AGE, family = "binomial", data = trial02_cdisc)
+get_marginal_effect(fit, trt = "TRTP", method = "Ye", contrast = "diff", reference = "Placebo")
+```
+
+To understand why this works and when to use each method, we need to
+clarify what type of treatment effect we’re estimating.
+
+The [ICH E9(R1)
+addendum](https://www.ema.europa.eu/en/documents/scientific-guideline/ich-e9-r1-addendum-estimands-and-sensitivity-analysis-clinical-trials-guideline-statistical-principles-clinical-trials-step-5_en.pdf)
+proposed a framework for the formulation of scientific questions and
+treatment effects in clinical trials. The framework emphasized the
+importance of formulating precisely the scientific questions of interest
+in clinical trials in the form of an estimand. An estimand describes the
+treatment effect of interest via five attributes, which include
+treatment, population, variable (endpoint), intercurrent event and
+population-level summary.
+
+Recent [FDA guidance
+(2023)](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adjusting-covariates-randomized-clinical-trials-drugs-and-biological-products)
+on *Adjusting for Covariates in Randomized Clinical Trials for Drugs and
+Biological Products for Industry* discussed various considerations when
+prospectively specifying covariate-adjusted analysis, including the
+distinction between *unconditional* vs. *conditional* average treatment
+effects.
+
+This vignette provides
+
+1.  A brief explanation of the different concepts on average treatment
+    effect covered in the package.
+2.  Practical guidance on selecting the appropriate variance estimation
+    method.
+3.  An analysis example using the package to estimate an average
+    treatment effect in a clinical trial with covariate adjustment.
+4.  A comparison with other implementations of the methods.
+
+## General concepts
+
+### What is an average treatment effect?
+
+In general, an average treatment effect is the effect of moving **a**
+population from untreated (control treatment) to treated (experimental
+treatment). An average treatment effect can be estimated either with or
+without covariate adjustment.
+
+Different flavours of average treatment effect exist, depending on the
+specific population that is moved from untreated to treated. For an
+overall superpopulation (denoted $S$), and for a given sample of
+patients in the trial (who are assumed to be randomly sampled from the
+superpopulation), we define the following potential estimands.
+
+1.  Population Average Treatment Effect ${PATE}^{S}$. The average
+    outcome of everyone in the superpopulation if they were treated with
+    the experimental treatment vs. the average outcome if they were
+    treated with the control treatment.
+2.  Conditional Average Treatment Effect, ${CATE}^{S}(x)$. The average
+    outcome of everyone in the superpopulation with covariate value $x$
+    if they were treated with the experimental treatment vs. the average
+    outcome if they were treated with the control treatment.
+3.  Conditional Population Average Treatment Effect ${CPATE}^{S}$. The
+    average of ${CATE}^{S}\left( x_{i} \right)$ for the patients
+    $i = 1,\ldots,N$ in the trial sample. Can also be thought of as the
+    expected difference in outcome means (experimental vs. control),
+    conditional on the baseline covariates $x_{1},\ldots,x_{N}$.
+4.  Sample Average Treatment Effect $SATE$. The average outcome of
+    everyone in the trial if they were treated with the experimental
+    treatment vs. the average outcome if they were treated with the
+    control treatment.
+
+In the FDA guidance, and in other recent discussions on covariate
+adjustment, average treatment effects are often classified as either
+*unconditional* or *conditional*. (Sometimes *marginal* is used
+interchangeably with *unconditional*). In this context, what is usually
+meant by “conditional” is ${CATE}^{S}(x)$. That is, a subgroup specific
+average treatment effect. Often, an assumption is made that subgroup
+specific average treatment effects are identical across subgroups. If
+this assumption is wrong, then interpretation can be challenging. What
+is usually meant by “unconditional” (or “marginal”) is an average of
+subgroup-specific average treatment effects. This second averaging step
+gives corresponding estimation procedures a level of robustness to model
+misspecification. Hence the following distinction in the FDA guidance:
+
+1.  Sponsors can perform covariate-adjusted estimation and inference for
+    an unconditional treatment effect in the primary analysis of data
+    from a randomized trial.
+2.  Sponsors should discuss with the relevant review divisions specific
+    proposals in a protocol or statistical analysis plan containing
+    nonlinear regression to estimate conditional treatment effects for
+    the primary analysis.
+
+Under the coarse classification of average treatment effects as either
+“unconditional / marginal” or “conditional”, the ${PATE}^{S}$,
+${CPATE}^{S}$ and $SATE$ can be viewed as “unconditional / marginal”,
+while the ${CATE}^{S}(x)$ can be viewed as “conditional”.
+
+### How to estimate “unconditional / marginal” average treatment effect?
+
+For a binary endpoint, an average treatment effect, whether it be a
+${PATE}^{S}$, ${CPATE}^{S}$ or $SATE$, can be estimated from an adjusted
+logistic regression using the g-computation method. That is, by
+estimating the average counterfactual outcomes on each arm based on
+predictions from the working model. Based on these average
+counterfactual outcomes, different summary measure such as risk
+difference, relative risk or odds ratio can be evaluated.
+
+Regardless of whether the estimand is ${PATE}^{S}$, ${CPATE}^{S}$ or
+$SATE$, the same point estimator can be used.
+
+### How to estimate the variance of the g-computation estimator of average treatment effect?
+
+To avoid ambiguity regarding how the variance of the g-computation
+estimator should be calculated, it is necessary to be precise about
+whether one is estimating the ${PATE}^{S}$, ${CPATE}^{S}$ or $SATE$.
+
+{beeca} implements variance estimation for ${PATE}^{S}$ based on the
+methods of [Ye et
+al. (2023)](https://doi.org/10.1080/24754269.2023.2205802), and
+${CPATE}^{S}$ based on [Ge et
+al. (2011)](https://doi.org/10.1177/009286151104500409).
+
+See [Magirr et al. (2025)](https://doi.org/10.1002/pst.70021) for
+discussion of the estimands ${PATE}^{S}$ and ${CPATE}^{S}$, and the
+corresponding methodology for variance estimation.
+
+## Which method should I use?
+
+For most regulatory submissions, use `method = "Ye"`. This method
+targets the **population average treatment effect (PATE)**, which is an
+unconditional estimand recommended by the FDA guidance (2023) for
+primary analyses.
+
+The **Ye et al. (2023)** method provides robust variance estimation for
+PATE by accounting for both model parameter uncertainty and the
+variability in the counterfactual predictions across the population.
+This unconditional approach is appropriate when you want to estimate the
+treatment effect for the broader population from which your trial sample
+was drawn.
+
+The **Ge et al. (2011)** method targets the **conditional population
+average treatment effect (CPATE)**, which conditions on the specific
+baseline covariate values observed in your trial. This is appropriate
+when your primary estimand is explicitly conditional on the trial
+sample’s baseline characteristics.
+
+**Key points:**
+
+- Point estimates are identical between methods; only the standard
+  errors differ.
+- If your protocol specifies an unconditional estimand (most common),
+  use `method = "Ye"`.
+- If your protocol specifies a conditional estimand, use
+  `method = "Ge"`.
+- When in doubt, use `method = "Ye"` — it aligns with FDA guidance on
+  unconditional estimands for covariate-adjusted analyses.
+
+For practical reporting examples, see
+[`vignette('clinical-trial-table')`](https://openpharma.github.io/beeca/articles/clinical-trial-table.md).
+
+## Analysis example
+
+In the following example, we will use an example CDISC clinical trial
+dataset in ADaM format
+([`?trial02_cdisc`](https://openpharma.github.io/beeca/reference/trial02_cdisc.md))
+with three treatment arms. Below we show how to describe and perform an
+adjusted analysis targeting marginal risk difference comparing the two
+active arms against placebo.
+
+A logistic regression model will be used to estimate the average
+treatment effect for Xanomeline High Dose vs Placebo and Xanomeline Low
+Dose vs Placebo. The model will adjust for baseline values of patient
+sex, race and age. Difference in marginal response proportions with
+p-value and corresponding 95% confidence interval will be estimated from
+the logistic regression model using the methodology described in Ge et
+al. 2011 with sandwich variance estimator (Liu et al. 2023). The
+sandwich estimator provides robustness to model-misspecification.
+
+``` r
+library(beeca)
+library(dplyr)
+```
+
+``` r
+## Prepare the dataset for input
+dat <- trial02_cdisc %>%
+  ## Treatment variable must be coded as a factor
+  dplyr::mutate(TRTP = factor(TRTP))
+
+## Fit the logistic regression model adjusting for SEX, RACE and AGE
+fit <- glm(AVAL ~ TRTP + SEX + RACE + AGE, family = "binomial", data = dat)
+
+## Calculate the marginal treatment effect estimate and associated variance for a difference contrast
+## using the Ge et al. method with robust HC0 sandwich variance
+marginal_fit <- get_marginal_effect(fit,
+  trt = "TRTP",
+  method = "Ge",
+  type = "HC0",
+  contrast = "diff",
+  reference = "Placebo"
+)
+```
+
+    ## Warning in meatHC(x, type = type, omega = omega): HC0 covariances become (close
+    ## to) singular if hat values are (close to) 1 as for observation(s) 24
+
+The results are summarised in ARD format (Analysis Results Dataset) for
+ease of subsequent reporting.
+
+``` r
+## View the ARD summary
+marginal_fit$marginal_results
+```
+
+    ## # A tibble: 19 × 8
+    ##    TRTVAR TRTVAL                  PARAM ANALTYP1 STAT  STATVAL ANALMETH ANALDESC
+    ##    <chr>  <chr>                   <chr> <chr>    <chr>   <dbl> <chr>    <chr>   
+    ##  1 TRTP   Placebo                 AVAL  DESCRIP… N     86      count    Compute…
+    ##  2 TRTP   Placebo                 AVAL  DESCRIP… n     29      count    Compute…
+    ##  3 TRTP   Placebo                 AVAL  DESCRIP… %     33.7    percent… Compute…
+    ##  4 TRTP   Placebo                 AVAL  INFEREN… risk   0.343  g-compu… Compute…
+    ##  5 TRTP   Placebo                 AVAL  INFEREN… risk…  0.0518 Ge - HC0 Compute…
+    ##  6 TRTP   Xanomeline High Dose    AVAL  DESCRIP… N     84      count    Compute…
+    ##  7 TRTP   Xanomeline High Dose    AVAL  DESCRIP… n     61      count    Compute…
+    ##  8 TRTP   Xanomeline High Dose    AVAL  DESCRIP… %     72.6    percent… Compute…
+    ##  9 TRTP   Xanomeline High Dose    AVAL  INFEREN… risk   0.716  g-compu… Compute…
+    ## 10 TRTP   Xanomeline High Dose    AVAL  INFEREN… risk…  0.0494 Ge - HC0 Compute…
+    ## 11 TRTP   Xanomeline Low Dose     AVAL  DESCRIP… N     84      count    Compute…
+    ## 12 TRTP   Xanomeline Low Dose     AVAL  DESCRIP… n     62      count    Compute…
+    ## 13 TRTP   Xanomeline Low Dose     AVAL  DESCRIP… %     73.8    percent… Compute…
+    ## 14 TRTP   Xanomeline Low Dose     AVAL  INFEREN… risk   0.743  g-compu… Compute…
+    ## 15 TRTP   Xanomeline Low Dose     AVAL  INFEREN… risk…  0.0460 Ge - HC0 Compute…
+    ## 16 TRTP   diff: Xanomeline High … AVAL  INFEREN… diff   0.374  g-compu… Compute…
+    ## 17 TRTP   diff: Xanomeline High … AVAL  INFEREN… diff…  0.0717 Ge - HC0 Compute…
+    ## 18 TRTP   diff: Xanomeline Low D… AVAL  INFEREN… diff   0.400  g-compu… Compute…
+    ## 19 TRTP   diff: Xanomeline Low D… AVAL  INFEREN… diff…  0.0694 Ge - HC0 Compute…
+
+The results can then be passed on to the prespecified testing strategy
+as required. Below we provide a simple example where normal
+approximation is applied:
+
+``` r
+## Extract results
+marginal_results <- marginal_fit$marginal_results
+diff_est <- marginal_results[marginal_results$STAT == "diff", "STATVAL"][[1]]
+diff_se <- marginal_results[marginal_results$STAT == "diff_se", "STATVAL"][[1]]
+
+## 95% confidence interval
+ci_l <- diff_est - (qnorm(0.975) * diff_se)
+ci_u <- diff_est + (qnorm(0.975) * diff_se)
+
+## Two-sided p-value
+z_score <- diff_est / diff_se
+p_value <- 2 * (1 - pnorm(abs(z_score)))
+
+tibble(
+  Contrast = marginal_results[marginal_results$STAT == "diff", ]$TRTVAL,
+  `Risk difference` = round(diff_est, 2),
+  `95% CI` = sprintf("(%s - %s)", round(ci_l, 2), round(ci_u, 2)),
+  `p-value` = formatC(p_value, format = "e", digits = 2)
+)
+```
+
+    ## # A tibble: 2 × 4
+    ##   Contrast                           `Risk difference` `95% CI`      `p-value`
+    ##   <chr>                                          <dbl> <chr>         <chr>    
+    ## 1 diff: Xanomeline High Dose-Placebo              0.37 (0.23 - 0.51) 1.86e-07 
+    ## 2 diff: Xanomeline Low Dose-Placebo               0.4  (0.26 - 0.54) 8.02e-09
+
+## Comparing different implementations
+
+To illustrate the usage of {beeca} and for purposes of results
+validation, we compare {beeca} with other available implementations of
+[Ge et al. (2011)](https://doi.org/10.1177/009286151104500409) and [Ye
+et al. (2023)](https://doi.org/10.1080/24754269.2023.2205802) methods in
+R and SAS. We demonstrate equivalence of results while highlighting the
+simple user interface of {beeca}. Our lightweight package has been
+developed with a focus on facilitating quick industry adoption including
+compliance with GxP validation requirements with minimal dependencies.
+
+**Note:** For these cross-validation comparisons, we use the `trial01`
+dataset (2-arm trial) because pre-computed results from SAS macros
+(`margins_trial01`, `ge_macro_trial01`) are available for this dataset.
+The methodology applies identically to `trial02_cdisc`.
+
+Throughout the comparisons, we use the dataset `trial01` included in the
+{beeca} package and focus on the risk difference contrast.
+
+### Ge et al (2011)
+
+#### beeca
+
+``` r
+# pre-process trial01 dataset to convert treatment arm to a factor and handle missing value
+data01 <- trial01 |>
+  transform(trtp = as.factor(trtp)) |>
+  dplyr::filter(!is.na(aval))
+fit <- glm(aval ~ trtp + bl_cov, family = "binomial", data = data01)
+beeca_ge <- get_marginal_effect(object = fit, trt = "trtp", method = "Ge",
+                                contrast = "diff", reference = "0", type = "model-based")
+cat("Point estimate", beeca_ge$marginal_est, "\nStandard error estimate", beeca_ge$marginal_se)
+```
+
+    ## Point estimate -0.06836399 
+    ## Standard error estimate 0.06071641
+
+#### Paper code (Ge et al. 2011)
+
+Code provided in [Ge et
+al. (2011)](https://doi.org/10.1177/009286151104500409) paper. Note the
+corresponding SAS code is also available in the paper.
+
+``` r
+ge_var_paper <- function(glmfit, trt) {
+  pder <- function(ahat, vc, x) {
+    #### ahat: logistic regression parameters
+    #### vc: variance-covariance matrix of ahat
+    #### x: full model matrix of the logistic regression
+    #### return mean of phat on x and its se
+    phat <- plogis(x %*% ahat)
+    pbar <- mean(phat)
+    pderiv <- t(phat * (1 - phat)) %*% x / nrow(x)
+    sepbar <- sqrt(pderiv %*% vc %*% t(pderiv))
+    return(list(pbar = pbar, sepbar = sepbar, pderiv = pderiv))
+  }
+
+  difP <- function(glmfit) {
+    #### estimate the proportion difference and its standard error
+    df <- glmfit$model
+
+    vc <- vcov(glmfit)
+    df[, trt] <- 1
+    mat <- model.matrix(glmfit$formula, data = df)
+    pderT <- pder(coef(glmfit), vc, mat)
+    df[, trt] <- 0
+    mat <- model.matrix(glmfit$formula, data = df)
+    pderC <- pder(coef(glmfit), vc, mat)
+
+    difb <- pderT$pbar - pderC$pbar
+    sedif <- sqrt((pderT$pderiv - pderC$pderiv) %*% vc %*% t(pderT$pderiv - pderC$pderiv))
+
+    return(list(
+      pT = pderT$pbar,
+      pC = pderC$pbar,
+      dif = difb,
+      sedif = sedif,
+      var = sedif**2
+    ))
+  }
+
+  return(list(est = difP(glmfit)$dif, se = difP(glmfit)$sedif[[1]]))
+}
+paper_ge <- ge_var_paper(fit, "trtp")
+cat("Point estimate", paper_ge$est, "\nStandard error estimate", paper_ge$se)
+```
+
+    ## Point estimate -0.06836399 
+    ## Standard error estimate 0.06071641
+
+#### Using {margins}
+
+``` r
+if (requireNamespace("margins", quietly = T)) {
+  margins_ge <- margins::margins(model = fit, variables = "trtp", vcov = vcov(fit))
+  cat("Point estimate", summary(margins_ge)$AME, "\nStandard error estimate", summary(margins_ge)$SE)
+}
+```
+
+    ## Point estimate -0.06836399 
+    ## Standard error estimate 0.06071641
+
+#### Using {marginaleffects}
+
+``` r
+if (requireNamespace("marginaleffects", quietly = T)) {
+  marginaleffects_ge <- marginaleffects::avg_comparisons(fit, variables = "trtp")
+  cat("Point estimate", marginaleffects_ge$estimate, "\nStandard error estimate", marginaleffects_ge$std.error)
+}
+```
+
+    ## Point estimate -0.06836399 
+    ## Standard error estimate 0.06071641
+
+#### SAS %Margins macro
+
+``` sas
+%Margins(data      = myWork.trial01,
+         class     = trtp,
+         classgref = first, /*Set reference to first level*/
+         response  = avaln,
+         roptions  = event='1', 
+         dist      = binomial,  
+         model     = trtp bl_cov,
+         margins   = trtp, 
+         options   = cl diff reverse, 
+         link      = logit);
+    
+** Store output data sets ; 
+data myWork.margins_trt_estimates;
+  set work._MARGINS;
+run;
+         
+data myWork.margins_trt_diffs;
+  set work._DIFFSPM;
+run;
+```
+
+``` r
+cat("Point estimate", margins_trial01$Estimate, "\nStandard error estimate", margins_trial01$StdErr)
+```
+
+    ## Point estimate -0.06836399 
+    ## Standard error estimate 0.06071641
+
+### Ye et al (2023)
+
+``` r
+beeca_ye <- get_marginal_effect(object = fit, trt = "trtp", method = "Ye", 
+                                contrast = "diff", reference = "0")
+cat("Point estimate", beeca_ye$marginal_est, "\nStandard error estimate", beeca_ye$marginal_se)
+```
+
+    ## Point estimate -0.06836399 
+    ## Standard error estimate 0.0608836
+
+**Version 1**: from `RobinCar` package
+
+``` r
+if (requireNamespace("RobinCar", quietly = T)) {
+  robincar_ye <- RobinCar::robincar_glm(data.frame(fit$data), response_col = as.character(fit$formula[2]),
+      treat_col = "trtp", formula = fit$formula, g_family = fit$family,
+      contrast_h = "diff")$contrast$result
+  cat("Point estimate", robincar_ye$estimate, "\nStandard error estimate", robincar_ye$se)
+}
+```
+
+    ## Point estimate -0.06836399 
+    ## Standard error estimate 0.0608836
+
+## Next Steps
+
+- For creating clinical trial tables from beeca results:
+  [`vignette('clinical-trial-table')`](https://openpharma.github.io/beeca/articles/clinical-trial-table.md)
+- For integrating with the cards ARD framework:
+  [`vignette('ard-cards-integration')`](https://openpharma.github.io/beeca/articles/ard-cards-integration.md)
+
+### References
+
+- Arel-Bundock V (2023). *marginaleffects: Predictions, Comparisons,
+  Slopes, Marginal Means, and Hypothesis Tests*.
+  <https://marginaleffects.com/>.
+
+- Bannick M, Ye T, Yi Y, Bian F (2024). *RobinCar: Robust Estimation and
+  Inference in Covariate-Adaptive Randomization*.
+  <https://CRAN.R-project.org/package=RobinCar>.
+
+- European Medicines Agency. 2020. “ICH E9 (R1) addendum on estimands
+  and sensitivity analysis in clinical trials to the guideline on
+  statistical principles for clinical trials.”
+  <https://www.ema.europa.eu/en/documents/scientific-guideline/ich-e9-r1-addendum-estimands-and-sensitivity-analysis-clinical-trials-guideline-statistical-principles-clinical-trials-step-5_en.pdf>
+
+- FDA. 2023. “Adjusting for Covariates in Randomized Clinical Trials for
+  Drugs and Biological Products. Final Guidance for Industry.”
+  <https://www.fda.gov/regulatory-information/search-fda-guidance-documents/adjusting-covariates-randomized-clinical-trials-drugs-and-biological-products>
+
+- Ge, Miaomiao, L Kathryn Durham, R Daniel Meyer, Wangang Xie, and Neal
+  Thomas. 2011. “Covariate-Adjusted Difference in Proportions from
+  Clinical Trials Using Logistic Regression and Weighted Risk
+  Differences.” *Drug Information Journal: DIJ/Drug Information
+  Association* 45: 481–93. <https://doi.org/10.1177/009286151104500409>
+
+- Magirr D, Wang C, Przybylski A, Baillie M (2025). “Estimating the
+  Variance of Covariate-Adjusted Estimators of Average Treatment Effects
+  in Clinical Trials With Binary Endpoints.” *Pharmaceutical Statistics*
+  24(4): e70021. <https://doi.org/10.1002/pst.70021>
+
+- SAS Institute Inc. “Predictive margins and average marginal effects.”
+  <https://support.sas.com/kb/63/038.html> (Last Published: 13 Dec 2023)
+
+- Thomas J. Leeper (2021). *margins: Marginal Effects for Model
+  Objects*. <https://github.com/leeper/margins>.
+
+- Ye, Ting, Marlena Bannick, Yanyao Yi, and Jun Shao. 2023. “Robust
+  Variance Estimation for Covariate-Adjusted Unconditional Treatment
+  Effect in Randomized Clinical Trials with Binary Outcomes.”
+  *Statistical Theory and Related Fields* 7 (2): 159–63.
+  <https://doi.org/10.1080/24754269.2023.2205802>
