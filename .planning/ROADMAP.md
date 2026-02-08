@@ -12,7 +12,7 @@ v0.4.0 extends beeca to accept GEE objects (glmgee from glmtoolbox, geeglm from 
 ## Phases
 
 - [x] **Phase 5: GEE Core Implementation** - S3 validation methods, variance routing, and end-to-end pipeline for GEE objects
-- [ ] **Phase 6: GEE Testing** - Comprehensive test suite, regression validation, R CMD check
+- [x] **Phase 6: GEE Testing** - Comprehensive test suite, regression validation, R CMD check
 - [ ] **Phase 7: GEE Documentation** - Vignette, man pages, NEWS.md for v0.4.0
 
 ## Phase Details
@@ -41,10 +41,10 @@ Plans:
   1. A GEE-specific test file exists with tests covering validation, variance estimation, and end-to-end pipeline for both glmgee and geeglm, cross-validated against manual computation
   2. All 308 existing GLM tests continue to pass without modification
   3. R CMD check passes with 0 errors and 0 warnings (notes acceptable)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: TBD
+- [x] 06-01-PLAN.md -- Comprehensive GEE test suite with manual delta method cross-validation and R CMD check
 
 ### Phase 7: GEE Documentation
 **Goal**: Users can discover and use beeca's GEE support through a vignette, updated man pages, and release notes
@@ -66,5 +66,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 5. GEE Core Implementation | 2/2 | Complete | 2026-02-07 |
-| 6. GEE Testing | 0/TBD | Not started | - |
+| 6. GEE Testing | 1/1 | Complete | 2026-02-07 |
 | 7. GEE Documentation | 0/TBD | Not started | - |
