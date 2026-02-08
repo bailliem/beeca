@@ -3,12 +3,13 @@
 #' @description
 #'
 #' Main variance estimation function. Estimates the variance-covariance
-#' matrix of a marginal estimand for a generalized linear model (GLM) object
+#' matrix of a marginal estimand for a GLM or GEE model object
 #' using specified methods. This function supports both Ge's and Ye's methods
 #' for variance estimation, accommodating different estimand specifications.
 #' @importFrom stats cov var
-#' @param object a fitted \code{\link[stats]{glm}} object augmented with
-#' `counterfactual.predictions`, `counterfactual.predictions` and `counterfactual.means`
+#' @param object a fitted model object (\code{\link[stats]{glm}}, \code{glmgee},
+#' or \code{geeglm}) augmented with `counterfactual.predictions` and
+#' `counterfactual.means` from prior pipeline steps.
 #'
 #' @param strata an optional string or vector of strings specifying the names
 #' of stratification variables. Relevant only for Ye's method and used to
@@ -21,13 +22,35 @@
 #' average treatment effect. The method `Ye` is based on Ye et al (2023) and is
 #' suitable for the variance estimation of population average treatment effect.
 #' For more details, see Magirr et al. (2025) \doi{10.1002/pst.70021}.
+#' Note: For GEE objects, only `Ge` is supported. Ye's method assumes
+#' independence and is not valid for GEE models.
 #'
 #'
-#' @param type a string indicating the type of
-#' variance estimator to use (only applicable for Ge's method). Supported types include HC0 (default),
-#' model-based, HC3, HC, HC1, HC2, HC4, HC4m, and HC5. See \link[sandwich]{vcovHC} for heteroscedasticity-consistent estimators.
-#' This parameter allows for flexibility in handling heteroscedasticity
-#' and model specification errors.
+#' @param type a string indicating the type of variance estimator to use
+#'   (only applicable for Ge's method). Supported types depend on the model class:
+#'
+#'   For \code{glm} objects:
+#'   \itemize{
+#'     \item HC0 (default) - Heteroscedasticity-consistent (White's estimator)
+#'     \item model-based - Model-based variance
+#'     \item HC1, HC2, HC3, HC4, HC4m, HC5 - Alternative HC estimators
+#'   }
+#'   See \link[sandwich]{vcovHC} for details.
+#'
+#'   For \code{glmgee} objects:
+#'   \itemize{
+#'     \item "robust" (default) - Robust sandwich estimator
+#'     \item "bias-corrected" - Bias-corrected sandwich estimator (Mancl-DeRouen)
+#'     \item "df-adjusted" - Degrees-of-freedom adjusted estimator
+#'   }
+#'
+#'   For \code{geeglm} objects:
+#'   \itemize{
+#'     \item "robust" (only option) - Robust sandwich estimator
+#'   }
+#'
+#'   Passing a GLM-style type (e.g., "HC0") to a GEE object will produce an
+#'   informative error listing valid GEE types.
 #'
 #' @param mod For Ye's method, the implementation of open-source RobinCar package
 #' has an additional variance decomposition step when estimating the robust variance,
@@ -36,7 +59,7 @@
 #' Ye et al (2022), default to `FALSE` to use the modified implementation in
 #' RobinCar and Bannick et al (2023) which improves stability.
 #'
-#' @return an updated `glm` object appended with an
+#' @return an updated model object (of the same class as the input) appended with an
 #' additional component `robust_varcov`, which is the estimated variance-covariance matrix
 #'  of the marginal effect. The matrix format and estimation method are
 #'  indicated in the matrix attributes.
@@ -49,7 +72,12 @@
 #' including stratification and different treatment contrasts,
 #' by providing a flexible interface for variance-covariance estimation.
 #'
-#' Note: Ensure that the `glm` object has been adequately prepared with
+#' For GEE objects, variance estimation uses the delta method with GEE's
+#' robust sandwich estimator obtained via \code{vcov()}. This replaces the
+#' \code{sandwich::vcovHC} approach used for standard GLM objects. See
+#' Ge et al. (2011) for the delta method methodology.
+#'
+#' Note: Ensure that the model object has been adequately prepared with
 #' \code{\link{predict_counterfactuals}} and \code{\link{average_predictions}}
 #' before applying `estimate_varcov()`. Failure to do so may result in
 #' errors indicating missing components.

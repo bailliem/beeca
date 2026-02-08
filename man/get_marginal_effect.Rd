@@ -16,7 +16,14 @@ get_marginal_effect(
 )
 }
 \arguments{
-\item{object}{a fitted \link[stats]{glm} object.}
+\item{object}{a fitted model object. Supported types:
+\itemize{
+\item \code{\link[stats]{glm}} with binomial family and logit link
+\item \code{glmgee} from \code{\link[glmtoolbox]{glmgee}} (requires \pkg{glmtoolbox})
+\item \code{geeglm} from \code{\link[geepack]{geeglm}} (requires \pkg{geepack})
+}
+For GEE objects, only single-timepoint data (one observation per cluster)
+is currently supported.}
 
 \item{trt}{a string specifying the name of the treatment variable
 in the model formula. It must be one of the linear predictor variables used
@@ -32,11 +39,16 @@ Supported methods are \code{Ge} and \code{Ye}. The default method is \code{Ge} b
 et al (2011) which is suitable for the variance estimation of conditional
 average treatment effect. The method \code{Ye} is based on Ye et al (2023) and is
 suitable for the variance estimation of population average treatment effect.
-For more details, see Magirr et al. (2025) \doi{10.1002/pst.70021}.}
+For more details, see Magirr et al. (2025) \doi{10.1002/pst.70021}.
+Note: For GEE objects, only \code{Ge} is supported.}
 
 \item{type}{a string indicating the type of
-variance estimator to use (only applicable for Ge's method). Supported types include HC0 (default),
-model-based, HC3, HC, HC1, HC2, HC4, HC4m, and HC5. See \link[sandwich]{vcovHC} for heteroscedasticity-consistent estimators.}
+variance estimator to use (only applicable for Ge's method). For \code{glm} objects: supported types
+include HC0 (default), model-based, HC3, HC, HC1, HC2, HC4, HC4m, and HC5.
+See \link[sandwich]{vcovHC} for heteroscedasticity-consistent estimators.
+For \code{glmgee} objects: supported types are "robust" (default),
+"bias-corrected", and "df-adjusted".
+For \code{geeglm} objects: only "robust" is supported.}
 
 \item{contrast}{a string indicating choice of contrast. Defaults to 'diff' for a risk difference. See \link[beeca]{apply_contrast}.}
 
@@ -54,7 +66,7 @@ Ye et al (2022), default to \code{FALSE} to use the modified implementation in
 RobinCar and Bannick et al (2023) which improves stability.}
 }
 \value{
-an updated \code{glm} object appended with marginal estimate components:
+an updated model object (of the same class as the input) appended with marginal estimate components:
 counterfactual.predictions (see \link[beeca]{predict_counterfactuals}),
 counterfactual.means (see \link[beeca]{average_predictions}),
 robust_varcov (see \link[beeca]{estimate_varcov}),
@@ -70,7 +82,7 @@ marginal_results           \tab Analysis results data (ARD) containing a summary
 }
 \description{
 Estimates the marginal treatment effect from a logistic regression working model
-using a specified choice of variance estimator and contrast.
+or GEE model using a specified choice of variance estimator and contrast.
 }
 \details{
 The \code{get_marginal_effect} function is a wrapper that facilitates
@@ -80,12 +92,33 @@ and other fields requiring robust statistical inference.
 It allows researchers to account for complex study designs,
 including stratification and treatment contrasts, by providing a flexible
 interface for variance-covariance estimation.
+
+For GEE objects (\code{glmgee} or \code{geeglm}), only the Ge et al. (2011)
+method is supported. Ye's method assumes independence and is not valid for
+GEE. The default variance type for GEE is "robust". See
+\code{\link{estimate_varcov}} for available GEE variance types.
 }
 \examples{
 trial01$trtp <- factor(trial01$trtp)
 fit1 <- glm(aval ~ trtp + bl_cov, family = "binomial", data = trial01) |>
   get_marginal_effect(trt = "trtp", method = "Ye", contrast = "diff", reference = "0")
 fit1$marginal_results
+
+\donttest{
+# GEE example (requires glmtoolbox)
+if (requireNamespace("glmtoolbox", quietly = TRUE)) {
+  library(glmtoolbox)
+  trial01$trtp <- factor(trial01$trtp)
+  trial01$id <- seq_len(nrow(trial01))
+  fit_gee <- glmgee(aval ~ trtp + bl_cov, id = id,
+                     family = binomial(link = "logit"),
+                     corstr = "independence", data = trial01)
+  result <- get_marginal_effect(fit_gee, trt = "trtp",
+                                 method = "Ge", contrast = "diff",
+                                 reference = "0")
+  result$marginal_results
+}
+}
 }
 \seealso{
 \code{\link[=predict_counterfactuals]{predict_counterfactuals()}} for generating counterfactual predictions

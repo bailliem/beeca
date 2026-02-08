@@ -1,3 +1,31 @@
+# beeca 0.4.0
+
+## New Features
+
+* **GEE support**: `get_marginal_effect()` now accepts GEE objects from
+  `{glmtoolbox}` (`glmgee`) and `{geepack}` (`geeglm`) for covariate-adjusted
+  analysis of single-timepoint binary endpoint trials. Only the Ge et al. (2011)
+  variance method is supported for GEE; the Ye et al. (2023) method assumes
+  independence and is not applicable.
+
+* `sanitize_model.glmgee()` and `sanitize_model.geeglm()`: New S3 methods
+  validate GEE objects, ensuring binomial family, logit link, and
+  single-timepoint data (one observation per cluster).
+
+* GEE variance estimation uses the delta method with GEE's robust sandwich
+  estimator via `vcov()`. For `glmgee` objects, supported variance types are
+  "robust" (default), "bias-corrected", and "df-adjusted". For `geeglm`
+  objects, only "robust" is supported.
+
+## Documentation
+
+* New vignette: "Using GEE Models with beeca" demonstrates end-to-end workflow
+  for GEE model analysis including variance type comparison.
+
+* Updated `get_marginal_effect()` and `estimate_varcov()` documentation to list
+  supported model classes (`glm`, `glmgee`, `geeglm`) and GEE-specific variance
+  types.
+
 # beeca 0.3.0
 
 ## New Features
