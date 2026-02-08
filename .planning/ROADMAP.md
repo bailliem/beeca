@@ -3,7 +3,7 @@
 ## Milestones
 
 - v0.3.0 GitHub Release Readiness (Shipped: 2026-02-07) -- archived to `.planning/milestones/v0.3.0-ROADMAP.md`
-- v0.4.0 GEE Extension (In Progress) -- Phases 5-7
+- v0.4.0 GEE Extension (Complete: 2026-02-08) -- Phases 5-7
 
 ## Overview
 
@@ -13,7 +13,7 @@ v0.4.0 extends beeca to accept GEE objects (glmgee from glmtoolbox, geeglm from 
 
 - [x] **Phase 5: GEE Core Implementation** - S3 validation methods, variance routing, and end-to-end pipeline for GEE objects
 - [x] **Phase 6: GEE Testing** - Comprehensive test suite, regression validation, R CMD check
-- [ ] **Phase 7: GEE Documentation** - Vignette, man pages, NEWS.md for v0.4.0
+- [x] **Phase 7: GEE Documentation** - Vignette, man pages, NEWS.md for v0.4.0
 
 ## Phase Details
 
@@ -57,7 +57,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 07-01-PLAN.md -- GEE vignette, roxygen man page updates, NEWS.md v0.4.0, pkgdown config
+- [x] 07-01-PLAN.md -- GEE vignette, roxygen man page updates, NEWS.md v0.4.0, pkgdown config
 
 ## Progress
 
@@ -67,4 +67,4 @@ Plans:
 |-------|----------------|--------|-----------|
 | 5. GEE Core Implementation | 2/2 | Complete | 2026-02-07 |
 | 6. GEE Testing | 1/1 | Complete | 2026-02-07 |
-| 7. GEE Documentation | 0/1 | Not started | - |
+| 7. GEE Documentation | 1/1 | Complete | 2026-02-08 |

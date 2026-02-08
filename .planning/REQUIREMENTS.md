@@ -34,9 +34,9 @@
 
 ### Documentation
 
-- [ ] **DOC-01**: New GEE vignette with end-to-end workflow example
-- [ ] **DOC-02**: Man pages document GEE support (sanitize_model, estimate_varcov)
-- [ ] **DOC-03**: NEWS.md updated for v0.4.0
+- [x] **DOC-01**: New GEE vignette with end-to-end workflow example
+- [x] **DOC-02**: Man pages document GEE support (sanitize_model, estimate_varcov)
+- [x] **DOC-03**: NEWS.md updated for v0.4.0
 
 ## Future Requirements (v0.5.0 ARD)
 
