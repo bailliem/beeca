@@ -54,10 +54,10 @@ Plans:
   1. A GEE vignette exists that walks through a complete end-to-end example: fitting a GEE model, running get_marginal_effect, and interpreting results
   2. The sanitize_model and estimate_varcov man pages document GEE support including accepted object types and variance type options
   3. NEWS.md has a v0.4.0 section listing GEE support as a new feature with the key capabilities
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 07-01: TBD
+- [ ] 07-01-PLAN.md -- GEE vignette, roxygen man page updates, NEWS.md v0.4.0, pkgdown config
 
 ## Progress
 
@@ -67,4 +67,4 @@ Plans:
 |-------|----------------|--------|-----------|
 | 5. GEE Core Implementation | 2/2 | Complete | 2026-02-07 |
 | 6. GEE Testing | 1/1 | Complete | 2026-02-07 |
-| 7. GEE Documentation | 0/TBD | Not started | - |
+| 7. GEE Documentation | 0/1 | Not started | - |
