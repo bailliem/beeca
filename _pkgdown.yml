@@ -74,3 +74,8 @@ articles:
   contents:
   - clinical-trial-table
   - ard-cards-integration
+
+- title: GEE Extension
+  navbar: GEE Extension
+  contents:
+  - gee-workflow

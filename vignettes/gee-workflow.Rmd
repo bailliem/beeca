@@ -1,0 +1,190 @@
+---
+title: "Using GEE Models with beeca"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using GEE Models with beeca}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Overview
+
+If your trial uses cluster randomization or has within-subject correlation structure, GEE models may be more appropriate than standard GLM. beeca now supports GEE objects from the glmtoolbox and geepack packages, allowing covariate-adjusted marginal treatment effect estimation using the same g-computation pipeline. This vignette covers:
+
+1. Setup and package requirements
+2. Preparing example data with cluster structure
+3. Fitting a GEE model with glmtoolbox
+4. Estimating marginal treatment effects
+5. Interpreting results
+6. Comparing variance types for GEE
+7. Using geepack as an alternative
+8. Key differences from standard GLM
+
+## Setup
+
+```{r setup, message=FALSE, warning=FALSE}
+library(beeca)
+library(dplyr)
+```
+
+For GEE model fitting, we use the `{glmtoolbox}` or `{geepack}` packages. These are suggested packages, not required dependencies. Install with `install.packages("glmtoolbox")` or `install.packages("geepack")`.
+
+```{r glmtoolbox-setup, eval=requireNamespace("glmtoolbox", quietly = TRUE)}
+library(glmtoolbox)
+```
+
+## Example Data
+
+We use beeca's `trial01` dataset for this example. First, prepare the treatment variable as a factor and add a cluster ID:
+
+```{r data-prep}
+# Prepare treatment variable
+trial01$trtp <- factor(trial01$trtp)
+
+# Add cluster ID (site_id)
+# For single-timepoint data, each subject forms its own cluster
+trial01$site_id <- 1:nrow(trial01)
+```
+
+**Note on cluster structure:** For single-timepoint data, each subject IS its own cluster. In practice, your data would have a natural clustering variable (e.g., study site, clinic). beeca currently supports single-timepoint GEE models only (one observation per cluster).
+
+## Fitting a GEE Model with glmtoolbox
+
+```{r fit-glmgee, eval=requireNamespace("glmtoolbox", quietly = TRUE)}
+fit_gee <- glmgee(
+  aval ~ trtp + bl_cov,
+  id = site_id,
+  family = binomial(link = "logit"),
+  corstr = "independence",
+  data = trial01
+)
+```
+
+**About correlation structures:** `corstr = "independence"` is appropriate for single-timepoint data. Other correlation structures (exchangeable, AR(1)) would be relevant for repeated measures, but beeca currently supports single-timepoint only.
+
+## Estimating the Marginal Treatment Effect
+
+Use `get_marginal_effect()` with the GEE model object just as you would with a standard GLM:
+
+```{r marginal-effect, eval=requireNamespace("glmtoolbox", quietly = TRUE)}
+result <- get_marginal_effect(
+  fit_gee,
+  trt = "trtp",
+  method = "Ge",
+  contrast = "diff",
+  reference = "0"
+)
+
+result$marginal_results
+```
+
+**Important:** Only `method = "Ge"` is supported for GEE objects. Ye's method assumes independence and is not applicable to GEE models. The default variance type for GEE is "robust".
+
+## Interpreting Results
+
+Access the marginal treatment effect estimate and standard error:
+
+```{r interpret, eval=requireNamespace("glmtoolbox", quietly = TRUE)}
+# Treatment effect estimate
+result$marginal_est
+
+# Standard error
+result$marginal_se
+
+# Complete ARD tibble
+result$marginal_results
+```
+
+The risk difference, standard error, and ARD tibble follow the same structure as standard GLM results. The key difference is that variance estimation uses GEE's robust sandwich estimator via the delta method (Ge et al., 2011) instead of `sandwich::vcovHC`.
+
+## Variance Types for GEE
+
+For `glmgee` objects, three variance types are available:
+
+```{r variance-types, eval=requireNamespace("glmtoolbox", quietly = TRUE)}
+# Default: robust sandwich estimator
+result_robust <- get_marginal_effect(fit_gee, trt = "trtp", method = "Ge",
+                                      type = "robust", contrast = "diff", reference = "0")
+
+# Bias-corrected (Mancl-DeRouen)
+result_bc <- get_marginal_effect(fit_gee, trt = "trtp", method = "Ge",
+                                  type = "bias-corrected", contrast = "diff", reference = "0")
+
+# Degrees-of-freedom adjusted
+result_df <- get_marginal_effect(fit_gee, trt = "trtp", method = "Ge",
+                                  type = "df-adjusted", contrast = "diff", reference = "0")
+```
+
+Compare the standard errors from each variance type:
+
+```{r variance-comparison, eval=requireNamespace("glmtoolbox", quietly = TRUE)}
+comparison <- data.frame(
+  Variance_Type = c("robust", "bias-corrected", "df-adjusted"),
+  Standard_Error = c(
+    result_robust$marginal_se,
+    result_bc$marginal_se,
+    result_df$marginal_se
+  )
+)
+comparison
+```
+
+**Note:** For `geeglm` objects, only "robust" variance type is available.
+
+## Using geepack
+
+The workflow is identical with `geepack`'s `geeglm` function:
+
+```{r geepack, eval=requireNamespace("geepack", quietly = TRUE)}
+library(geepack)
+
+fit_geeglm <- geeglm(
+  aval ~ trtp + bl_cov,
+  id = site_id,
+  family = binomial(link = "logit"),
+  corstr = "independence",
+  data = trial01
+)
+
+result_geeglm <- get_marginal_effect(
+  fit_geeglm,
+  trt = "trtp",
+  method = "Ge",
+  contrast = "diff",
+  reference = "0"
+)
+
+result_geeglm$marginal_results
+```
+
+## Key Differences from Standard GLM
+
+When using GEE models with beeca:
+
+- **Method restriction:** Only Ge et al. (2011) method supported (not Ye et al. 2023)
+- **Variance types:** "robust", "bias-corrected", "df-adjusted" (glmgee) or "robust" only (geeglm) instead of HC0/HC1/.../HC5
+- **Data structure:** Single-timepoint data only (one observation per cluster)
+- **Point estimates:** Marginal treatment effects are identical to what standard GLM would produce for single-timepoint independence structure
+- **Variance estimation:** Uses GEE's own `vcov()` method instead of `sandwich::vcovHC`
+
+## Next Steps
+
+- For estimand concepts and variance method selection, see `vignette('estimand_and_implementations')`
+- For creating publication tables from beeca results, see `vignette('clinical-trial-table')`
+
+## References
+
+- Ge, M., Durham, L.K., Meyer, R.D., Xie, W., & Thomas, N. (2011). Covariate-Adjusted Difference in Proportions from Clinical Trials Using Logistic Regression and Weighted Risk Differences. *Drug Information Journal*, 45, 481-493. https://doi.org/10.1177/009286151104500409
+
+- Ye, T., Bannick, M., Yi, Y., & Shao, J. (2023). Robust Variance Estimation for Covariate-Adjusted Unconditional Treatment Effect in Randomized Clinical Trials with Binary Outcomes. *Statistical Theory and Related Fields*, 7(2), 159-163. https://doi.org/10.1080/24754269.2023.2205802
+
+- Magirr, D., Wang, C., Przybylski, A., & Baillie, M. (2025). Estimating the Variance of Covariate-Adjusted Estimators of Average Treatment Effects in Clinical Trials With Binary Endpoints. *Pharmaceutical Statistics*, 24(4), e70021. https://doi.org/10.1002/pst.70021
